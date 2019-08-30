@@ -1,0 +1,5 @@
+export const INPUT_TEXT_COLOR = '#999999'
+export const INPUT_TEXT_PLACEHOLDER_COLOR = '#b3b3b3'
+export const BORDER_BOTTOM_INPUT_COLOR = 'rgba(158, 158, 158, 0.2)'
+export const FORGOT_LINK_COLOR = '#b3b3b3'
+export const CREATE_ACCOUNT_COLOR = '#808080'
