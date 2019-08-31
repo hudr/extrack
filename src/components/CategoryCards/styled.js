@@ -22,7 +22,7 @@ export const CardContainer = styled.div`
   margin: 0 auto;
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
-    justify-content: space-between;
+    justify-content: space-around;
     width: 90%;
     margin: 0;
   }

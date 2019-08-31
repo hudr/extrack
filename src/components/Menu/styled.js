@@ -14,6 +14,10 @@ export const HeaderContainer = styled.div`
   flex-direction: column;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   width: 70%;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 export const UnorderedList = styled.ul`
@@ -45,7 +49,7 @@ export const MenuLink = styled.a`
   font-weight: bold;
   color: grey;
   text-decoration: none;
-  padding-bottom: 10px;
+  padding-bottom: 8px;
   border: 0;
   border-bottom: 2px solid transparent;
 
