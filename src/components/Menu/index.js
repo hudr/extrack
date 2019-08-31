@@ -32,9 +32,6 @@ export default class Menu extends Component {
               <MenuLink href='#'>Tips</MenuLink>
             </List>
             <List>
-              <MenuLink href='#'>Profile</MenuLink>
-            </List>
-            <List>
               <MenuLink href='#'>Logout</MenuLink>
             </List>
           </UnorderedList>
