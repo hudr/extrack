@@ -49,7 +49,7 @@ export const MenuLink = styled.a`
   font-weight: bold;
   color: grey;
   text-decoration: none;
-  padding-bottom: 8px;
+  padding-bottom: 9px;
   border: 0;
   border-bottom: 2px solid transparent;
 
