@@ -23,7 +23,7 @@ export default class Header extends Component {
           </TextContainer>
           <ImageContainer>
             <Img
-              src='http://afernandes.adv.br/wp-content/uploads/Team-Member-3.jpg'
+              src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg'
               alt='Avatar'
               onClick={() => console.log('Photo click')}
             />
