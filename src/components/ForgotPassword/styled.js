@@ -53,7 +53,7 @@ export const Input = styled.input`
 `
 
 export const RecoveryButton = styled.button`
-  margin-top: 20px;
+  margin-top: 15px;
   border: 0;
   border-radius: 5px;
   height: 48px;
@@ -68,11 +68,14 @@ export const RecoveryButton = styled.button`
   }
 `
 
-export const BackToHome = styled.a`
+export const BackToHome = styled.div`
   margin-top: 15px;
   font-size: 13px;
   font-weight: 600;
   align-self: center;
-  text-decoration: none;
-  color: ${FORGOT_LINK_COLOR};
+
+  a {
+    text-decoration: none;
+    color: ${FORGOT_LINK_COLOR};
+  }
 `

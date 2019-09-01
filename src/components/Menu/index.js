@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { NavLink } from 'react-router-dom'
 
 import '../../../src/App.css'
 
@@ -17,22 +18,39 @@ export default class Menu extends Component {
         <HeaderContainer>
           <UnorderedList>
             <List>
-              <MenuLink href='#'>News</MenuLink>
+              <MenuLink>
+                <NavLink activeClassName='current' to='/create'>
+                  Create
+                </NavLink>
+              </MenuLink>
             </List>
             <List>
-              <MenuLink href='#'>Create</MenuLink>
+              <MenuLink>
+                <NavLink activeClassName='current' to='/home'>
+                  Categories
+                </NavLink>
+              </MenuLink>
             </List>
             <List>
-              <MenuLink href='#'>Expenses</MenuLink>
+              <MenuLink>
+                <NavLink activeClassName='current' to='/graphics'>
+                  Graphics
+                </NavLink>
+              </MenuLink>
             </List>
             <List>
-              <MenuLink href='#'>Graphics</MenuLink>
+              <MenuLink>
+                <NavLink activeClassName='current' to='/tips'>
+                  Tips
+                </NavLink>
+              </MenuLink>
             </List>
             <List>
-              <MenuLink href='#'>Tips</MenuLink>
-            </List>
-            <List>
-              <MenuLink href='#'>Logout</MenuLink>
+              <MenuLink>
+                <NavLink activeClassName='current' exact={true} to='/'>
+                  Logout
+                </NavLink>
+              </MenuLink>
             </List>
           </UnorderedList>
         </HeaderContainer>
