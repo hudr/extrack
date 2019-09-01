@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import logo from '../../assets/images/logo.png'
 
@@ -19,7 +20,9 @@ export default class ForgotPassword extends Component {
           <Img src={logo} />
           <Input placeholder='Type your email' />
           <RecoveryButton type='submit'>Recovery password</RecoveryButton>
-          <BackToHome href='#'>Back to homepage</BackToHome>
+          <BackToHome>
+            <Link to='/'>Back to login</Link>
+          </BackToHome>
         </Form>
       </StyledContainer>
     )

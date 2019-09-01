@@ -53,7 +53,7 @@ export const Input = styled.input`
 `
 
 export const CreateAccountButton = styled.button`
-  margin-top: 30px;
+  margin-top: 15px;
   border: 0;
   border-radius: 5px;
   height: 48px;
@@ -68,11 +68,14 @@ export const CreateAccountButton = styled.button`
   }
 `
 
-export const GoToLoginLink = styled.a`
+export const GoToLoginLink = styled.div`
   margin-top: 15px;
-  font-size: 13px;
-  font-weight: 600;
   align-self: center;
-  text-decoration: none;
-  color: ${FORGOT_LINK_COLOR};
+
+  a {
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: ${FORGOT_LINK_COLOR};
+  }
 `
