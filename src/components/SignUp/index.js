@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 
 import logo from '../../assets/images/logo.png'
 
@@ -23,8 +24,8 @@ export default class SignUp extends Component {
           <Input type='password' placeholder='Password' />
           <Input type='password' placeholder='Confirm password' />
           <CreateAccountButton type='submit'>SignUp</CreateAccountButton>
-          <GoToLoginLink href='#'>
-            Already have an account? Go to login!
+          <GoToLoginLink>
+            <Link to='/'>Already have an account? Go to login!</Link>
           </GoToLoginLink>
         </Form>
       </StyledContainer>

@@ -34,10 +34,7 @@ export const UnorderedList = styled.ul`
 
 export const List = styled.li`
   list-style: none;
-
-  padding-bottom: 10px;
   display: block;
-
   transition: all 500ms ease;
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
@@ -45,21 +42,25 @@ export const List = styled.li`
   }
 `
 
-export const MenuLink = styled.a`
-  font-weight: bold;
+export const MenuLink = styled.div`
   color: grey;
+  font-weight: bold;
   text-decoration: none;
   padding-bottom: 9px;
   border: 0;
   border-bottom: 2px solid transparent;
 
-  width: 200px;
+  a {
+    color: grey;
+    text-decoration: none;
+  }
 
   transition: all 500ms ease;
 
-  :focus {
+  a.current {
     color: #3967d4;
     border-bottom: 2px solid #3967d4;
     transition: all 2s ease;
+    padding-bottom: 9px;
   }
 `
