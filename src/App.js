@@ -1,9 +1,9 @@
 import React, { Fragment, Component } from 'react'
 
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
-import ForgotPassword from './components/ForgotPassword'
-import Home from './components/Home'
+import SignIn from './Pages/SignIn'
+import SignUp from './Pages/SignUp'
+import ForgotPassword from './Pages/ForgotPassword'
+import Home from './Pages/Home'
 import CategoryCards from './components/CategoryCards'
 
 import { Switch, Route } from 'react-router-dom'
