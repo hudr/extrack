@@ -32,7 +32,7 @@ export default class SignIn extends Component {
           <CreateAccount>
             <CreateAccountText>Don't have an account?</CreateAccountText>
             <CreateAccountButton>
-              <Link to='/signup'>Create</Link>
+              <Link to='/signup'>SignUp</Link>
             </CreateAccountButton>
           </CreateAccount>
         </Form>
