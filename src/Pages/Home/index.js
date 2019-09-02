@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react'
 
-import Header from '../Header'
-import Menu from '../Menu'
+import Header from '../../components/Header'
+import Menu from '../../components/Menu'
 
 class Home extends Component {
   render() {
