@@ -23,7 +23,7 @@ export default class SignUp extends Component {
           <Input placeholder='Type your email' />
           <Input type='password' placeholder='Password' />
           <Input type='password' placeholder='Confirm password' />
-          <CreateAccountButton type='submit'>SignUp</CreateAccountButton>
+          <CreateAccountButton type='submit'>Sign Up</CreateAccountButton>
           <GoToLoginLink>
             <Link to='/'>Already have an account? Go to login!</Link>
           </GoToLoginLink>

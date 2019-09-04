@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { InitializeFirebase } from '../../config/Firebase'
-import * as firebase from 'firebase'
+import firebase from '../../config/Firebase'
+import history from '../../history'
 
 import logo from '../../assets/images/logo.png'
 
@@ -17,7 +17,7 @@ import {
   CreateAccountButton
 } from './styled'
 
-export default class SignIn extends Component {
+class SignIn extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -28,58 +28,37 @@ export default class SignIn extends Component {
     this.handleCategoryChange = this.handleCategoryChange.bind(this)
   }
 
-  componentDidMount() {
-    InitializeFirebase()
-  }
-
   handleCategoryChange(event) {
     this.setState({ email: event.target.value })
   }
 
   SignIn = (email, password) => {
     try {
-      firebase.auth().signInWithEmailAndPassword(email, password)
-      firebase.auth().onAuthStateChanged(function(user) {})
-    } catch (error) {
-      console.log(error.toString(error))
-    }
-  }
-
-  SignUp = (email, password) => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(
-        function(user) {
-          // [END createwithemail]
-          // callSomeFunction(); Optional
-          // var user = firebase.auth().currentUser;
-          user
-            .updateProfile({
-              displayName: 'Hudson'
-            })
-            .then(
-              function() {
-                // Update successful.
-              },
-              function(error) {
-                // An error happened.
-              }
-            )
-        },
-        function(error) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(function() {
+          firebase.auth().onAuthStateChanged(function(user) {
+            console.log('UID', user.uid)
+            history.push('/home')
+          })
+        })
+        .catch(function(error) {
           // Handle Errors here.
-          var errorCode = error.code
-          var errorMessage = error.message
-          // [START_EXCLUDE]
+          const errorCode = error.code
+          const errorMessage = error.message
+
           if (errorCode === 'auth/weak-password') {
             alert('The password is too weak.')
           } else {
             console.error(error, errorMessage)
           }
-          // [END_EXCLUDE]
-        }
-      )
+          // ...
+          console.log('error code', errorCode)
+        })
+    } catch (error) {
+      console.log(error.toString(error))
+    }
   }
 
   render() {
@@ -100,7 +79,7 @@ export default class SignIn extends Component {
             onChange={this.handleCategoryChange}
           />
           <LoginButton type='submit'>
-            <Link onClick={() => this.SignIn(this.state.email, '32382989aaA@')}>
+            <Link onClick={() => this.SignIn(this.state.email, '32382989abb')}>
               Login
             </Link>
           </LoginButton>
@@ -110,11 +89,7 @@ export default class SignIn extends Component {
           <CreateAccount>
             <CreateAccountText>Don't have an account?</CreateAccountText>
             <CreateAccountButton>
-              <Link
-                onClick={() => this.SignUp(this.state.email, '32382989aaA@')}
-              >
-                SignUp
-              </Link>
+              <Link to='/signup'>Sign Up</Link>
             </CreateAccountButton>
           </CreateAccount>
         </Form>
@@ -122,3 +97,5 @@ export default class SignIn extends Component {
     )
   }
 }
+
+export default SignIn
