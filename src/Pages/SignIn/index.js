@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import firebase from '../../config/Firebase'
-import history from '../../history'
 
 import logo from '../../assets/images/logo.png'
 
@@ -14,75 +13,67 @@ import {
   ForgotLink,
   CreateAccount,
   CreateAccountText,
-  CreateAccountButton
+  CreateAccountButton,
+  ErrorMessage
 } from './styled'
 
 class SignIn extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: '',
-      password: ''
-    }
-
-    this.handleCategoryChange = this.handleCategoryChange.bind(this)
+  state = {
+    email: '',
+    password: '',
+    error: ''
   }
 
-  handleCategoryChange(event) {
-    this.setState({ email: event.target.value })
-  }
+  handleSignIn = async e => {
+    e.preventDefault()
 
-  SignIn = (email, password) => {
-    try {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(function() {
-          firebase.auth().onAuthStateChanged(function(user) {
-            console.log('UID', user.uid)
-            history.push('/home')
-          })
-        })
-        .catch(function(error) {
-          // Handle Errors here.
-          const errorCode = error.code
-          const errorMessage = error.message
+    const { email, password } = this.state
 
-          if (errorCode === 'auth/weak-password') {
-            alert('The password is too weak.')
-          } else {
-            console.error(error, errorMessage)
-          }
-          // ...
-          console.log('error code', errorCode)
-        })
-    } catch (error) {
-      console.log(error.toString(error))
+    if (!email || !password) {
+      this.setState({ error: 'Please, fill in all required fields.' })
+    } else {
+      try {
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+        this.props.history.push('/categories')
+      } catch (error) {
+        // console.log(error)
+
+        if (error.code === 'auth/invalid-email')
+          this.setState({ error: 'Invalid email address format.' })
+
+        if (error.code === 'auth/user-not-found')
+          this.setState({ error: "This account doesn't exist." })
+
+        if (error.code === 'auth/wrong-password')
+          this.setState({ error: 'Wrong password' })
+
+        if (error.code === 'auth/too-many-requests')
+          this.setState({ error: 'You tried to login so many times, wait.' })
+      }
     }
   }
 
   render() {
-    const { email } = this.state
+    const { email, password, error } = this.state
     return (
       <StyledContainer>
-        <Form>
+        <Form onSubmit={this.handleSignIn}>
           <Img src={logo} />
+          {error !== '' && <ErrorMessage>{error}</ErrorMessage>}
           <Input
             placeholder='Username'
             value={email}
-            onChange={this.handleCategoryChange}
+            onChange={e => this.setState({ email: e.target.value })}
           />
           <Input
             type='password'
             placeholder='Password'
-            value={email}
-            onChange={this.handleCategoryChange}
+            value={password}
+            onChange={e => this.setState({ password: e.target.value })}
           />
-          <LoginButton type='submit'>
-            <Link onClick={() => this.SignIn(this.state.email, '32382989abb')}>
-              Login
-            </Link>
-          </LoginButton>
+
+          <LoginButton type='submit'>Login</LoginButton>
+
           <ForgotLink>
             <Link to='/forgotpw'>Forgot password?</Link>
           </ForgotLink>
@@ -98,4 +89,4 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn
+export default withRouter(SignIn)

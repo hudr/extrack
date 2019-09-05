@@ -15,7 +15,6 @@ import {
 
 export default class CategoryCards extends Component {
   render() {
-    console.log('Mocked Categories', Categories)
     return (
       <StyledContainer>
         <CardContainer>

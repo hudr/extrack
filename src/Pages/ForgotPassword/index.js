@@ -10,50 +10,51 @@ import {
   Img,
   Input,
   RecoveryButton,
+  ErrorMessage,
   BackToHome
 } from './styled'
 
 export default class ForgotPassword extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: ''
-    }
-
-    this.handleEmailChange = this.handleEmailChange.bind(this)
+  state = {
+    email: '',
+    error: ''
   }
 
-  handleForgotPassword = event => {
-    event.preventDefault()
+  handleForgotPassword = async e => {
+    e.preventDefault()
 
     const { email } = this.state
 
-    firebase
-      .auth()
-      .sendPasswordResetEmail(email)
-      .then(function() {
-        console.log('Email enviado com sucesso para')
-      })
-      .catch(function(e) {
-        console.error('error', e)
-      })
-  }
+    if (!email) {
+      this.setState({ error: 'Please, fill in all required fields.' })
+    } else {
+      try {
+        await firebase.auth().sendPasswordResetEmail(email)
+        this.props.history.push('/')
+      } catch (error) {
+        // console.log(error)
 
-  handleEmailChange(event) {
-    this.setState({ email: event.target.value })
+        if (error.code === 'auth/invalid-email')
+          this.setState({ error: 'Invalid email address format.' })
+
+        if (error.code === 'auth/user-not-found')
+          this.setState({ error: "This account doesn't exist." })
+      }
+    }
   }
 
   render() {
-    const { email } = this.state
+    const { email, error } = this.state
 
     return (
       <StyledContainer>
         <Form onSubmit={this.handleForgotPassword}>
           <Img src={logo} />
+          {error !== '' && <ErrorMessage>{error}</ErrorMessage>}
           <Input
             placeholder='Type your email'
-            onChange={this.handleEmailChange}
             value={email}
+            onChange={e => this.setState({ email: e.target.value })}
           />
           <RecoveryButton type='submit'>Recovery password</RecoveryButton>
           <BackToHome>
