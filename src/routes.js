@@ -18,7 +18,6 @@ const Routes = () => (
 
       <Home />
       <Switch>
-        {/* <Route path='*' component={() => <h1>Page not found</h1>} /> */}
         <Route path='/create' component={() => <h1>Create</h1>} />
         <Route path='/categories' component={Categories} />
         <Route path='/graphics' component={() => <h1>Graphics</h1>} />
