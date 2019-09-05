@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
+import firebase from '../../config/Firebase'
 
 import '../../../src/App.css'
 
@@ -11,7 +12,16 @@ import {
   MenuLink
 } from './styled'
 
-export default class Menu extends Component {
+class Menu extends Component {
+  handleSignOut = async () => {
+    try {
+      await firebase.auth().signOut()
+      this.props.history.push('/')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   render() {
     return (
       <StyledContainer>
@@ -26,7 +36,7 @@ export default class Menu extends Component {
             </List>
             <List>
               <MenuLink>
-                <NavLink activeClassName='current' to='/home'>
+                <NavLink activeClassName='current' to='/categories'>
                   Categories
                 </NavLink>
               </MenuLink>
@@ -46,11 +56,7 @@ export default class Menu extends Component {
               </MenuLink>
             </List>
             <List>
-              <MenuLink>
-                <NavLink activeClassName='current' exact={true} to='/'>
-                  Logout
-                </NavLink>
-              </MenuLink>
+              <MenuLink onClick={this.handleSignOut}>Logout</MenuLink>
             </List>
           </UnorderedList>
         </HeaderContainer>
@@ -58,3 +64,5 @@ export default class Menu extends Component {
     )
   }
 }
+
+export default withRouter(Menu)

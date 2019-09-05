@@ -25,7 +25,7 @@ export const Img = styled.img`
   width: 200px;
   margin: 0 auto;
   align-self: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 export const Input = styled.input`

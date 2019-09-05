@@ -26,7 +26,7 @@ export const Img = styled.img`
   width: 200px;
   margin: 0 auto;
   align-self: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 export const Input = styled.input`
@@ -62,15 +62,8 @@ export const LoginButton = styled.button`
   cursor: pointer;
   transition: 0.3s;
 
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    font-size: 16px;
-    color: #fff;
-    text-decoration: none;
-  }
+  font-size: 16px;
+  color: #fff;
 
   :hover {
     background: #3967d4;
@@ -128,4 +121,14 @@ export const CreateAccountButton = styled.button`
   :hover {
     background: #9e1ee7;
   }
+`
+
+export const ErrorMessage = styled.div`
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 13px;
+  background-color: rgba(255, 0, 0, 0.6);
+  color: white;
 `
