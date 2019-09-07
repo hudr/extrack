@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const StyledContainer = styled.div`
-  width: 80%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,11 +9,11 @@ export const StyledContainer = styled.div`
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
     margin-top: 35px;
+    width: 80%;
   }
 `
 
 export const CardContainer = styled.div`
-  width: 75%;
   display: flex;
   flex-wrap: wrap;
   align-content: center;
@@ -22,13 +21,16 @@ export const CardContainer = styled.div`
   margin: 0 auto;
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
-    justify-content: space-around;
     width: 90%;
-    margin: 0;
   }
 `
 
 export const CardDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
   width: 120px;
   height: 150px;
   background: white;
@@ -39,15 +41,17 @@ export const CardDiv = styled.div`
   -moz-box-shadow: 26px 3px 44px -42px rgba(0, 0, 0, 0.48);
   box-shadow: 26px 3px 44px -42px rgba(0, 0, 0, 0.48);
 
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    width: 100%;
+    margin-right: 0;
+  }
+`
+
+export const CardContent = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
-  @media screen and (min-width: 320px) and (max-width: 767px) {
-    margin: 0;
-    margin-bottom: 20px;
-  }
 `
 
 export const CardImg = styled.img`

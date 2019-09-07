@@ -12,6 +12,7 @@ export const HeaderContainer = styled.div`
   display: inline-block;
   overflow: scroll;
   flex-direction: column;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
   width: 70%;
 
@@ -25,8 +26,6 @@ export const UnorderedList = styled.ul`
 
   justify-content: space-around;
   margin: 0px 35px 0px 35px;
-
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
     justify-content: flex-start;
@@ -52,6 +51,8 @@ export const MenuLink = styled.div`
   text-decoration: none;
   padding-bottom: 9px;
   border: 0;
+
+  cursor: pointer;
 
   a {
     color: grey;

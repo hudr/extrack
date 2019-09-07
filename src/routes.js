@@ -12,16 +12,57 @@ import Categories from './components/CategoryCards'
 const Routes = () => (
   <BrowserRouter>
     <Fragment>
-      <Route exact path='/' component={SignIn} />
-      <Route path='/signup' component={SignUp} />
-      <Route path='/forgotpw' component={ForgotPassword} />
-
-      <Home />
       <Switch>
-        <Route path='/create' component={() => <h1>Create</h1>} />
-        <Route path='/categories' component={Categories} />
-        <Route path='/graphics' component={() => <h1>Graphics</h1>} />
-        <Route path='/tips' component={() => <h1>Tips</h1>} />
+        <Route exact path='/' component={SignIn} />
+        <Route path='/signup' component={SignUp} />
+        <Route path='/forgotpw' component={ForgotPassword} />
+
+        {/* Nested Components - Need to refactor */}
+        <Route
+          path='/create'
+          render={() => (
+            <Fragment>
+              <Home />
+              <h1>Create</h1>
+            </Fragment>
+          )}
+        />
+
+        <Route
+          path='/categories'
+          render={() => (
+            <Fragment>
+              <Home />
+              <Categories />
+            </Fragment>
+          )}
+        />
+
+        <Route
+          path='/graphics'
+          render={() => (
+            <Fragment>
+              <Home />
+              <h1>Graphics</h1>
+            </Fragment>
+          )}
+        />
+
+        <Route
+          path='/tips'
+          render={() => (
+            <Fragment>
+              <Home />
+              <h1>Tips</h1>
+            </Fragment>
+          )}
+        />
+
+        <Route
+          path='*'
+          exact={true}
+          component={() => <h1>Page not found!</h1>}
+        />
       </Switch>
     </Fragment>
   </BrowserRouter>
