@@ -8,6 +8,7 @@ import {
   StyledContainer,
   CardContainer,
   CardDiv,
+  CardContent,
   CardImg,
   CardTitle,
   CardDescription
@@ -21,11 +22,13 @@ export default class CategoryCards extends Component {
           {Categories.map(category => (
             <Fragment key={category.id}>
               <CardDiv>
-                <CardImg src={category.imgURL} alt={category.altText} />
-                <CardTitle>{category.title}</CardTitle>
-                <CardDescription>
-                  {category.numberOfItems} item(s)
-                </CardDescription>
+                <CardContent>
+                  <CardImg src={category.imgURL} alt={category.altText} />
+                  <CardTitle>{category.title}</CardTitle>
+                  <CardDescription>
+                    {category.numberOfItems} item(s)
+                  </CardDescription>
+                </CardContent>
               </CardDiv>
             </Fragment>
           ))}
