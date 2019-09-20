@@ -48,7 +48,7 @@ class Home extends Component {
     const { name } = this.state
     return (
       <Fragment>
-        <Header name={name} />
+        <Header />
         <Menu />
       </Fragment>
     )
