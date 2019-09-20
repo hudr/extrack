@@ -6,13 +6,33 @@ import Header from '../../components/Header'
 import Menu from '../../components/Menu'
 
 class Home extends Component {
-  loadingUser = async () => {
-    await firebase.auth().onAuthStateChanged(user => {
+  state = {
+    name: ''
+  }
+
+  handleLoadingUser = async () => {
+    firebase.auth().onAuthStateChanged(async user => {
       if (user) {
-        // Usuário logado
-        // var uid = user.uid
-        // console.log(uid)
-        this.props.history.push('/categories')
+        const db = firebase.firestore()
+        const docRef = await db
+          .collection('users')
+          .doc('data')
+          .collection('profile')
+          .doc(`${user.uid}`)
+        docRef
+          .get()
+          .then(async doc => {
+            if (doc.exists) {
+              const userName = await doc.data().name
+              this.setState({ name: userName })
+            } else {
+              // doc.data() will be undefined in this case
+              console.log('No such document!')
+            }
+          })
+          .catch(function(error) {
+            console.log('Error getting document:', error)
+          })
       } else {
         //Usuário deslogado, volta pra tela inicial
         this.props.history.push('/')
@@ -20,14 +40,15 @@ class Home extends Component {
     })
   }
 
-  componentDidMount() {
-    this.loadingUser()
+  async componentDidMount() {
+    await this.handleLoadingUser()
   }
 
   render() {
+    const { name } = this.state
     return (
       <Fragment>
-        <Header />
+        <Header name={name} />
         <Menu />
       </Fragment>
     )

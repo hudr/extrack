@@ -18,7 +18,7 @@ export default class Header extends Component {
       <StyledContainer>
         <HeaderContainer>
           <TextContainer>
-            <Title>Hi, Hudson!</Title>
+            <Title>Hi, {this.props.name ? this.props.name : 'User' }!</Title>
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
