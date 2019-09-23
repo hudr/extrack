@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
-import users from '../store/ducks/users'
+import auth from '../store/ducks/auth'
 
 export default combineReducers({
-  users
+  auth
 })

@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { login } from '../../store/ducks/users'
+import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import '../../../src/App.css'
 
@@ -18,24 +18,24 @@ import {
 } from './styled'
 
 class Header extends Component {
+  async componentDidMount() {
+    this.props.handleUserInfo()
+  }
   render() {
-    const { login, user } = this.props
-    console.log('user', user)
+    const { authUser } = this.props
+
     return (
       <StyledContainer>
         <HeaderContainer>
           <TextContainer>
-            <Title>
-              Hi, {this.props.user.username ? this.props.user.username : 'User'}
-              !
-            </Title>
+            <Title>Hi, {authUser.userName ? authUser.userName : 'User'}!</Title>
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
             <Img
               src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg'
               alt='Avatar'
-              onClick={() => login()}
+              onClick={() => console.log('Photo Click')}
             />
           </ImageContainer>
         </HeaderContainer>
@@ -44,12 +44,12 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  isLogged: state.users.isLogged,
-  user: state.users.user
+const mapStateToProps = states => ({
+  isLogged: states.auth.isLogged,
+  authUser: states.auth.authUser
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators({ login }, dispatch)
+const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
 
 export default connect(
   mapStateToProps,
