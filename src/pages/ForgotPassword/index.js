@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import firebase from '../../config/Firebase'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import logo from '../../assets/images/logo.png'
 
@@ -14,10 +18,9 @@ import {
   BackToHome
 } from './styled'
 
-export default class ForgotPassword extends Component {
+class ForgotPassword extends Component {
   state = {
-    email: '',
-    error: ''
+    email: ''
   }
 
   handleForgotPassword = async e => {
@@ -25,32 +28,29 @@ export default class ForgotPassword extends Component {
 
     const { email } = this.state
 
-    if (!email) {
-      this.setState({ error: 'Please, fill in all required fields.' })
-    } else {
-      try {
-        await firebase.auth().sendPasswordResetEmail(email)
-        this.props.history.push('/')
-      } catch (error) {
-        // console.log(error)
+    const { handleForgotPassword } = this.props
 
-        if (error.code === 'auth/invalid-email')
-          this.setState({ error: 'Invalid email address format.' })
+    await handleForgotPassword(email)
 
-        if (error.code === 'auth/user-not-found')
-          this.setState({ error: "This account doesn't exist." })
-      }
+    const { errorMessage } = this.props
+
+    if (errorMessage === '') {
+      this.props.history.push('/')
     }
   }
 
   render() {
-    const { email, error } = this.state
+    const { email } = this.state
+
+    const { errorMessage } = this.props
 
     return (
       <StyledContainer>
         <Form onSubmit={this.handleForgotPassword}>
           <Img src={logo} />
-          {error !== '' && <ErrorMessage>{error}</ErrorMessage>}
+
+          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
           <Input
             placeholder='Type your email'
             value={email}
@@ -65,3 +65,14 @@ export default class ForgotPassword extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  errorMessage: state.auth.errorMessage
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ForgotPassword)

@@ -1,6 +1,5 @@
 import firebase from '../../config/Firebase'
 
-// Action Types
 export const Types = {
   LOGIN: 'auth/LOGIN',
   LOGOUT: 'auth/LOGOUT',
@@ -8,62 +7,79 @@ export const Types = {
   ERROR: 'auth/ERROR'
 }
 
-// Reducer
-const initialState = {
+const INITIAL_STATE = {
   isLogged: false,
   authUser: {},
   errorMessage: ''
 }
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.LOGIN:
-      console.log('payload login', action.payload)
       return {
-        ...initialState,
-        isLogged: action.payload
+        ...state,
+        isLogged: action.payload,
+        errorMessage: ''
       }
     case Types.USERINFO:
-      console.log('payload userinfo', action.payload)
       return {
-        ...initialState,
+        ...state,
         authUser: action.payload
       }
     case Types.LOGOUT:
-      console.log('payload logout', action.payload)
       return {
-        ...initialState,
+        ...state,
         isLogged: action.payload.isLogged,
         authUser: action.payload.authUser
       }
     case Types.ERROR:
-      console.log('payload error', action.payload)
       return {
-        ...initialState,
+        ...state,
         errorMessage: action.payload
       }
     default:
-      console.log('default', action.payload)
       return state
   }
 }
 
-// Action Creators
 export const Creators = {
-  handleLogin(email, password) {
+  handleSignUp: (email, password, confirmPassword, firstName) => {
     return async dispatch => {
-      console.log('Entrei no handleLogin')
-      try {
-        if (!email || !password) {
+      if (!email || !password || !confirmPassword || !firstName) {
+        dispatch({
+          type: Types.ERROR,
+          payload: 'Please, fill in all required fields.'
+        })
+      } else {
+        if (password !== confirmPassword) {
           dispatch({
             type: Types.ERROR,
-            payload: 'Please, fill in all required fields.'
+            payload: 'Passwords need to be equal.'
           })
         } else {
           await firebase
             .auth()
-            .signInWithEmailAndPassword(email, password)
+            .createUserWithEmailAndPassword(email, password)
             .then(
+              () => {
+                const user = firebase.auth().currentUser
+                if (user) {
+                  const db = firebase.firestore()
+                  db.collection('users')
+                    .doc('data')
+                    .collection('profile')
+                    .doc(`${user.uid}`)
+                    .set({
+                      name: firstName
+                    })
+                    .then(function() {
+                      console.log('Document successfully written!')
+                    })
+                    .catch(function(error) {
+                      console.error('Error writing document: ', error)
+                    })
+                }
+              },
               dispatch({
                 type: Types.LOGIN,
                 payload: true
@@ -76,35 +92,79 @@ export const Creators = {
                   payload: 'Invalid email address format.'
                 })
 
-              if (error.code === 'auth/user-not-found')
+              if (error.code === 'auth/email-already-in-use')
                 dispatch({
                   type: Types.ERROR,
-                  payload: "This account doesn't exist."
+                  payload: 'This email is already in use.'
                 })
 
-              if (error.code === 'auth/wrong-password')
+              if (error.code === 'auth/weak-password')
                 dispatch({
                   type: Types.ERROR,
-                  payload: 'Wrong password.'
+                  payload: 'You need to use a strong password.'
                 })
 
-              if (error.code === 'auth/too-many-requests')
+              if (error.code === 'auth/operation-not-allowed')
                 dispatch({
                   type: Types.ERROR,
-                  payload: 'You tried to login so many times, wait.'
+                  payload: "Create user with email isn't allowed."
                 })
             })
         }
-      } catch (err) {
-        console.log(err)
       }
     }
   },
 
-  handleUserInfo() {
+  handleLogin: (email, password) => {
     return async dispatch => {
-      console.log('Entrei no handleUserInfo')
-      firebase.auth().onAuthStateChanged(user => {
+      if (!email || !password) {
+        dispatch({
+          type: Types.ERROR,
+          payload: 'Please, fill in all required fields.'
+        })
+      } else {
+        await firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .then(() =>
+            dispatch({
+              type: Types.LOGIN,
+              payload: true
+            })
+          )
+          .catch(error => {
+            if (error.code === 'auth/invalid-email')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'Invalid email address format.'
+              })
+
+            if (error.code === 'auth/user-not-found')
+              dispatch({
+                type: Types.ERROR,
+                payload: "This account doesn't exist."
+              })
+
+            if (error.code === 'auth/wrong-password')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'Wrong password.'
+              })
+
+            if (error.code === 'auth/too-many-requests')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'You tried to login so many times, wait.'
+              })
+          })
+      }
+    }
+  },
+
+  handleUserInfo: () => {
+    return async dispatch => {
+      const user = firebase.auth().currentUser
+      if (user) {
         const db = firebase.firestore()
         const docRef = db
           .collection('users')
@@ -119,8 +179,7 @@ export const Creators = {
               dispatch({
                 type: Types.USERINFO,
                 payload: {
-                  userName: userName,
-                  age: 24
+                  userName: userName
                 }
               })
             } else {
@@ -131,18 +190,53 @@ export const Creators = {
           .catch(function(error) {
             console.log('Error getting document:', error)
           })
-      })
+      } else {
+        console.log('User not logged in')
+      }
     }
   },
 
-  handleLogout() {
+  handleForgotPassword: email => {
     return async dispatch => {
-      console.log('Entrei no handleLogout')
+      if (!email) {
+        dispatch({
+          type: Types.ERROR,
+          payload: 'Please, fill in all required fields.'
+        })
+      } else {
+        await firebase
+          .auth()
+          .sendPasswordResetEmail(email)
+          .then(
+            dispatch({
+              type: Types.ERROR,
+              payload: ''
+            })
+          )
+          .catch(error => {
+            if (error.code === 'auth/invalid-email')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'Invalid email address format.'
+              })
+
+            if (error.code === 'auth/user-not-found')
+              dispatch({
+                type: Types.ERROR,
+                payload: "This account doesn't exist."
+              })
+          })
+      }
+    }
+  },
+
+  handleLogout: () => {
+    return async dispatch => {
       try {
         await firebase
           .auth()
           .signOut()
-          .then(
+          .then(() =>
             dispatch({
               type: Types.LOGOUT,
               payload: {

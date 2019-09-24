@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-
-import { Creators as AuthActions } from '../../store/ducks/auth'
-
-import '../../../src/App.css'
 
 import {
   StyledContainer,
@@ -18,9 +13,6 @@ import {
 } from './styled'
 
 class Header extends Component {
-  async componentDidMount() {
-    this.props.handleUserInfo()
-  }
   render() {
     const { authUser } = this.props
 
@@ -28,7 +20,7 @@ class Header extends Component {
       <StyledContainer>
         <HeaderContainer>
           <TextContainer>
-            <Title>Hi, {authUser.userName ? authUser.userName : 'User'}!</Title>
+            <Title>Hi, {authUser.userName}!</Title>
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
@@ -45,13 +37,10 @@ class Header extends Component {
 }
 
 const mapStateToProps = states => ({
-  isLogged: states.auth.isLogged,
   authUser: states.auth.authUser
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(Header)

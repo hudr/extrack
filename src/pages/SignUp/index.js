@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import firebase from '../../config/Firebase'
+
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import logo from '../../assets/images/logo.png'
 
@@ -14,58 +18,47 @@ import {
   ErrorMessage
 } from './styled'
 
-export default class SignUp extends Component {
+class SignUp extends Component {
   state = {
+    firstName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    error: ''
+    confirmPassword: ''
   }
 
   handleSignUp = async e => {
     e.preventDefault()
 
-    const { email, password, confirmPassword } = this.state
+    const { firstName, email, password, confirmPassword } = this.state
 
-    if (!email || !password || !confirmPassword) {
-      this.setState({ error: 'Please, fill in all required fields.' })
-    } else {
-      if (password !== confirmPassword) {
-        this.setState({ error: 'Passwords need to be equal.' })
-      } else {
-        try {
-          await firebase.auth().createUserWithEmailAndPassword(email, password)
-          this.props.history.push('/categories')
+    const { handleSignUp, handleUserInfo } = this.props
 
-          // this.props.history.push('/categories')
-        } catch (error) {
-          if (error.code === 'auth/invalid-email')
-            this.setState({ error: 'Invalid email address format.' })
+    await handleSignUp(email, password, confirmPassword, firstName)
 
-          if (error.code === 'auth/email-already-in-use')
-            this.setState({ error: 'This email is already in use.' })
+    const { isLogged } = this.props
 
-          if (error.code === 'auth/weak-password')
-            this.setState({ error: 'You need to use a strong password.' })
-
-          if (error.code === 'auth/operation-not-allowed')
-            this.setState({ error: "Create user with email isn't allowed." })
-        }
-      }
+    if (isLogged === true) {
+      await handleUserInfo()
+      this.props.history.push('/categories')
     }
   }
 
   render() {
-    const { email, password, confirmPassword, error } = this.state
+    const { firstName, email, password, confirmPassword } = this.state
+    const { errorMessage } = this.props
 
     return (
       <StyledContainer>
         <Form onSubmit={this.handleSignUp}>
           <Img src={logo} />
-          {error !== '' && <ErrorMessage>{error}</ErrorMessage>}
 
-          <Input placeholder='Name' />
-          <Input placeholder='Last Name' />
+          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
+          <Input
+            placeholder='First Name'
+            value={firstName}
+            onChange={e => this.setState({ firstName: e.target.value })}
+          />
           <Input
             placeholder='Type your email'
             value={email}
@@ -93,3 +86,15 @@ export default class SignUp extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  isLogged: state.auth.isLogged,
+  errorMessage: state.auth.errorMessage
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUp)

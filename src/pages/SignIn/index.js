@@ -31,13 +31,16 @@ class SignIn extends Component {
     e.preventDefault()
 
     const { email, password } = this.state
-    const { handleLogin } = this.props
+    const { handleLogin, handleUserInfo } = this.props
 
     await handleLogin(email, password)
 
     const { isLogged } = this.props
 
-    if (isLogged === true) return this.props.history.push('/categories')
+    if (isLogged === true) {
+      await handleUserInfo()
+      this.props.history.push('/categories')
+    }
   }
 
   render() {

@@ -17,10 +17,14 @@ import {
 class Menu extends Component {
   handleSignOut = async () => {
     const { handleLogout } = this.props
+
     await handleLogout()
 
     const { isLogged } = this.props
-    if (isLogged === false) return this.props.history.push('/')
+
+    if (isLogged === false) {
+      this.props.history.push('/')
+    }
   }
 
   render() {
