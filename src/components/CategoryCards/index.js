@@ -15,6 +15,7 @@ import {
 } from './styled'
 
 export default class CategoryCards extends Component {
+  
   render() {
     return (
       <StyledContainer>

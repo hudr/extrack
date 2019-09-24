@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { NavLink, withRouter } from 'react-router-dom'
-import firebase from '../../config/Firebase'
 
-import '../../../src/App.css'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+
+import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import {
   StyledContainer,
@@ -14,11 +16,14 @@ import {
 
 class Menu extends Component {
   handleSignOut = async () => {
-    try {
-      await firebase.auth().signOut()
+    const { handleLogout } = this.props
+
+    await handleLogout()
+
+    const { isLogged } = this.props
+
+    if (isLogged === false) {
       this.props.history.push('/')
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -65,4 +70,13 @@ class Menu extends Component {
   }
 }
 
-export default withRouter(Menu)
+const mapStateToProps = state => ({
+  isLogged: state.auth.isLogged
+})
+
+const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Menu))

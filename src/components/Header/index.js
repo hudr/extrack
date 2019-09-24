@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import '../../../src/App.css'
+import { connect } from 'react-redux'
 
 import {
   StyledContainer,
@@ -12,20 +12,22 @@ import {
   ImageContainer
 } from './styled'
 
-export default class Header extends Component {
+class Header extends Component {
   render() {
+    const { authUser } = this.props
+
     return (
       <StyledContainer>
         <HeaderContainer>
           <TextContainer>
-            <Title>Hi, Hudson!</Title>
+            <Title>Hi, {authUser.userName}!</Title>
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
             <Img
               src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg'
               alt='Avatar'
-              onClick={() => console.log('Photo click')}
+              onClick={() => console.log('Photo Click')}
             />
           </ImageContainer>
         </HeaderContainer>
@@ -33,3 +35,12 @@ export default class Header extends Component {
     )
   }
 }
+
+const mapStateToProps = states => ({
+  authUser: states.auth.authUser
+})
+
+export default connect(
+  mapStateToProps,
+  null
+)(Header)

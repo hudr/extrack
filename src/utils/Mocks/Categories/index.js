@@ -2,7 +2,7 @@ export const Categories = [
   {
     id: 0,
     title: 'Food',
-    numberOfItems: 21,
+    numberOfItems: 28,
     imgURL: 'https://image.flaticon.com/icons/svg/706/706195.svg',
     altText: 'Image Alt'
   },
