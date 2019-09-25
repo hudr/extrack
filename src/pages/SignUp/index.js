@@ -31,14 +31,13 @@ class SignUp extends Component {
 
     const { firstName, email, password, confirmPassword } = this.state
 
-    const { handleSignUp, handleUserInfo } = this.props
+    const { handleSignUp } = this.props
 
     await handleSignUp(email, password, confirmPassword, firstName)
 
     const { isLogged } = this.props
 
     if (isLogged === true) {
-      await handleUserInfo()
       this.props.history.push('/categories')
     }
   }
@@ -88,6 +87,7 @@ class SignUp extends Component {
 }
 
 const mapStateToProps = state => ({
+  authUser: state.auth.authUser,
   isLogged: state.auth.isLogged,
   errorMessage: state.auth.errorMessage
 })

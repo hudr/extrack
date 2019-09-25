@@ -24,7 +24,9 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.USERINFO:
       return {
         ...state,
-        authUser: action.payload
+        authUser: action.payload,
+        isLogged: true,
+        errorMessage: ''
       }
     case Types.LOGOUT:
       return {
@@ -45,72 +47,65 @@ export default function reducer(state = INITIAL_STATE, action) {
 export const Creators = {
   handleSignUp: (email, password, confirmPassword, firstName) => {
     return async dispatch => {
+      //Instancia do Firestore
+      const db = firebase.firestore()
+
+      //Condições de campos vazios
       if (!email || !password || !confirmPassword || !firstName) {
         dispatch({
           type: Types.ERROR,
           payload: 'Please, fill in all required fields.'
         })
+      } else if (password !== confirmPassword) {
+        dispatch({
+          type: Types.ERROR,
+          payload: 'Passwords need to be equal.'
+        })
       } else {
-        if (password !== confirmPassword) {
-          dispatch({
-            type: Types.ERROR,
-            payload: 'Passwords need to be equal.'
-          })
-        } else {
-          await firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(
-              () => {
-                const user = firebase.auth().currentUser
-                if (user) {
-                  const db = firebase.firestore()
-                  db.collection('users')
-                    .doc('data')
-                    .collection('profile')
-                    .doc(`${user.uid}`)
-                    .set({
-                      name: firstName
-                    })
-                    .then(function() {
-                      console.log('Document successfully written!')
-                    })
-                    .catch(function(error) {
-                      console.error('Error writing document: ', error)
-                    })
-                }
-              },
-              dispatch({
-                type: Types.LOGIN,
-                payload: true
+        //Gravando documento ao criar conta
+        await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(function(user) {
+            db.collection('users')
+              .doc('data')
+              .collection('profile')
+              .doc(user.user.uid)
+              .set({
+                name: firstName
               })
-            )
-            .catch(error => {
-              if (error.code === 'auth/invalid-email')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: 'Invalid email address format.'
-                })
-
-              if (error.code === 'auth/email-already-in-use')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: 'This email is already in use.'
-                })
-
-              if (error.code === 'auth/weak-password')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: 'You need to use a strong password.'
-                })
-
-              if (error.code === 'auth/operation-not-allowed')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: "Create user with email isn't allowed."
-                })
+            dispatch({
+              type: Types.USERINFO,
+              payload: {
+                userName: firstName
+              }
             })
-        }
+          })
+          .catch(function(error) {
+            if (error.code === 'auth/invalid-email')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'Invalid email address format.'
+              })
+
+            if (error.code === 'auth/email-already-in-use')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'This email is already in use.'
+              })
+
+            if (error.code === 'auth/weak-password')
+              dispatch({
+                type: Types.ERROR,
+                payload: 'You need to use a strong password.'
+              })
+
+            if (error.code === 'auth/operation-not-allowed')
+              dispatch({
+                type: Types.ERROR,
+                payload: "Create user with email isn't allowed."
+              })
+          })
       }
     }
   },
@@ -183,7 +178,6 @@ export const Creators = {
                 }
               })
             } else {
-              // doc.data() will be undefined in this case
               console.log('No such document!')
             }
           })
