@@ -45,6 +45,17 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
+  hideErrorMessage: () => {
+    return dispatch => {
+      setTimeout(() => {
+        dispatch({
+          type: Types.ERROR,
+          payload: ''
+        })
+      }, 5000)
+    }
+  },
+
   handleSignUp: (email, password, confirmPassword, firstName) => {
     return async dispatch => {
       //Instancia do Firestore
@@ -107,6 +118,7 @@ export const Creators = {
               })
           })
       }
+      dispatch(Creators.hideErrorMessage())
     }
   },
 
@@ -127,6 +139,7 @@ export const Creators = {
               payload: true
             })
           )
+
           .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
@@ -153,6 +166,7 @@ export const Creators = {
               })
           })
       }
+      dispatch(Creators.hideErrorMessage())
     }
   },
 
@@ -221,6 +235,7 @@ export const Creators = {
               })
           })
       }
+      dispatch(Creators.hideErrorMessage())
     }
   },
 
