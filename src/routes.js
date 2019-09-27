@@ -6,6 +6,7 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home'
+import CreateExpense from './components/CreateExpense'
 
 import Categories from './components/CategoryCards'
 
@@ -23,7 +24,7 @@ const Routes = () => (
           render={() => (
             <Fragment>
               <Home />
-              <h1>Create</h1>
+              <CreateExpense />
             </Fragment>
           )}
         />
