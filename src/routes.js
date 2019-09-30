@@ -1,71 +1,68 @@
 import React, { Fragment } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-//Pages & Components
+import PrivateRoute from './PrivateRoute'
+
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home'
 import CreateExpense from './components/CreateExpense'
-
 import Categories from './components/CategoryCards'
 
 const Routes = () => (
   <BrowserRouter>
-    <Fragment>
-      <Switch>
-        <Route exact path='/' component={SignIn} />
-        <Route path='/signup' component={SignUp} />
-        <Route path='/forgotpw' component={ForgotPassword} />
+    <Switch>
+      <Route exact path='/' component={SignIn} />
+      <Route exact path='/signup' component={SignUp} />
+      <Route exact path='/forgotpw' component={ForgotPassword} />
 
-        {/* Nested Components - Need to refactor */}
-        <Route
-          path='/create'
-          render={() => (
-            <Fragment>
-              <Home />
-              <CreateExpense />
-            </Fragment>
-          )}
-        />
+      <PrivateRoute
+        exact
+        path='/create'
+        component={() => (
+          <Fragment>
+            <Home />
+            <CreateExpense />
+          </Fragment>
+        )}
+      />
 
-        <Route
-          path='/categories'
-          render={() => (
-            <Fragment>
-              <Home />
-              <Categories />
-            </Fragment>
-          )}
-        />
+      <PrivateRoute
+        exact
+        path='/categories'
+        component={() => (
+          <Fragment>
+            <Home />
+            <Categories />
+          </Fragment>
+        )}
+      />
 
-        <Route
-          path='/graphics'
-          render={() => (
-            <Fragment>
-              <Home />
-              <h1>Graphics</h1>
-            </Fragment>
-          )}
-        />
+      <PrivateRoute
+        exact
+        path='/graphics'
+        component={() => (
+          <Fragment>
+            <Home />
+            <h1>Graphics</h1>
+          </Fragment>
+        )}
+      />
 
-        <Route
-          path='/tips'
-          render={() => (
-            <Fragment>
-              <Home />
-              <h1>Tips</h1>
-            </Fragment>
-          )}
-        />
+      <PrivateRoute
+        exact
+        path='/tips'
+        component={() => (
+          <Fragment>
+            <Home />
+            <h1>Tips</h1>
+          </Fragment>
+        )}
+      />
 
-        <Route
-          path='*'
-          exact={true}
-          component={() => <h1>Page not found!</h1>}
-        />
-      </Switch>
-    </Fragment>
+      <Route path='*' exact={true} component={() => <h1>Page not found!</h1>} />
+    </Switch>
   </BrowserRouter>
 )
 
