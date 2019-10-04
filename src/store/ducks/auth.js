@@ -88,7 +88,8 @@ export const Creators = {
             dispatch({
               type: Types.USERINFO,
               payload: {
-                userName: firstName
+                userName: firstName,
+                userEmail: email
               }
             })
           })
