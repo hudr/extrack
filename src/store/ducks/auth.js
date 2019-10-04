@@ -88,7 +88,8 @@ export const Creators = {
             dispatch({
               type: Types.USERINFO,
               payload: {
-                userName: firstName
+                userName: firstName,
+                userEmail: email
               }
             })
           })
@@ -170,40 +171,6 @@ export const Creators = {
     }
   },
 
-  handleUserInfo: () => {
-    return async dispatch => {
-      const user = firebase.auth().currentUser
-      if (user) {
-        const db = firebase.firestore()
-        const docRef = db
-          .collection('users')
-          .doc('data')
-          .collection('profile')
-          .doc(`${user.uid}`)
-        docRef
-          .get()
-          .then(async doc => {
-            if (doc.exists) {
-              const userName = await doc.data().name
-              dispatch({
-                type: Types.USERINFO,
-                payload: {
-                  userName: userName
-                }
-              })
-            } else {
-              console.log('No such document!')
-            }
-          })
-          .catch(function(error) {
-            console.log('Error getting document:', error)
-          })
-      } else {
-        console.log('User not logged in')
-      }
-    }
-  },
-
   handleForgotPassword: email => {
     return async dispatch => {
       if (!email) {
@@ -236,6 +203,79 @@ export const Creators = {
           })
       }
       dispatch(Creators.hideErrorMessage())
+    }
+  },
+
+  handleUpdateProfile: (userName, userGenre, userBirthDate, userEmail) => {
+    return async dispatch => {
+      //Instancia do Firestore
+      const db = firebase.firestore()
+
+      const user = firebase.auth().currentUser
+      if (user) {
+        //Gravando documento ao salvar novas infos
+        await db
+          .collection('users')
+          .doc('data')
+          .collection('profile')
+          .doc(user.uid)
+          .set({
+            name: userName,
+            gender: userGenre,
+            birthDate: userBirthDate
+          })
+
+        user.updateEmail(userEmail)
+
+        dispatch({
+          type: Types.USERINFO,
+          payload: {
+            userName,
+            userGenre,
+            userBirthDate,
+            userEmail
+          }
+        })
+      }
+    }
+  },
+
+  handleUserInfo: () => {
+    return async dispatch => {
+      const user = firebase.auth().currentUser
+      if (user) {
+        const db = firebase.firestore()
+        const docRef = db
+          .collection('users')
+          .doc('data')
+          .collection('profile')
+          .doc(`${user.uid}`)
+        docRef
+          .get()
+          .then(async doc => {
+            if (doc.exists) {
+              const userName = await doc.data().name
+              const gender = await doc.data().gender
+              const birthDate = await doc.data().birthDate
+              dispatch({
+                type: Types.USERINFO,
+                payload: {
+                  userName: userName,
+                  userGenre: gender,
+                  userBirthDate: birthDate,
+                  userEmail: user.email
+                }
+              })
+            } else {
+              console.log('No such document!')
+            }
+          })
+          .catch(function(error) {
+            console.log('Error getting document:', error)
+          })
+      } else {
+        console.log('User not logged in')
+      }
     }
   },
 
