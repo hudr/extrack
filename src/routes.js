@@ -7,6 +7,8 @@ import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Home from './pages/Home'
+import Profile from './pages/Profile'
+
 import CreateExpense from './components/CreateExpense'
 import Categories from './components/CategoryCards'
 
@@ -16,6 +18,16 @@ const Routes = () => (
       <Route exact path='/' component={SignIn} />
       <Route exact path='/signup' component={SignUp} />
       <Route exact path='/forgotpw' component={ForgotPassword} />
+
+      <PrivateRoute
+        exact
+        path='/profile'
+        component={() => (
+          <Fragment>
+            <Profile />
+          </Fragment>
+        )}
+      />
 
       <PrivateRoute
         exact
