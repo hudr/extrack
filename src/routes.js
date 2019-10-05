@@ -1,15 +1,18 @@
 import React, { Fragment } from 'react'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
-import PrivateRoute from './PrivateRoute'
+import PrivateRoute from './utils/PrivateRoute'
 
+//Components
+import Header from './components/Header'
+import Menu from './components/Menu'
+
+//Pages
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
-import Home from './pages/Home'
 import Profile from './pages/Profile'
 
-import CreateExpense from './components/CreateExpense'
 import Categories from './components/CategoryCards'
 
 const Routes = () => (
@@ -34,8 +37,9 @@ const Routes = () => (
         path='/create'
         component={() => (
           <Fragment>
-            <Home />
-            <CreateExpense />
+            <Header />
+            <Menu />
+            <h1>Create</h1>
           </Fragment>
         )}
       />
@@ -45,7 +49,8 @@ const Routes = () => (
         path='/categories'
         component={() => (
           <Fragment>
-            <Home />
+            <Header />
+            <Menu />
             <Categories />
           </Fragment>
         )}
@@ -56,7 +61,8 @@ const Routes = () => (
         path='/graphics'
         component={() => (
           <Fragment>
-            <Home />
+            <Header />
+            <Menu />
             <h1>Graphics</h1>
           </Fragment>
         )}
@@ -67,7 +73,8 @@ const Routes = () => (
         path='/tips'
         component={() => (
           <Fragment>
-            <Home />
+            <Header />
+            <Menu />
             <h1>Tips</h1>
           </Fragment>
         )}
