@@ -211,56 +211,32 @@ export const Creators = {
       //Instancia do Firestore
       const db = firebase.firestore()
 
-      if (!userName || !userGenre || !userBirthDate || !userEmail) {
-        await dispatch({
-          type: Types.ERROR,
-          payload: 'Please, fill in all required fields.'
-        })
-      } else {
-        const user = firebase.auth().currentUser
-        if (user) {
-          await user
-            .updateEmail(userEmail)
-            .then(async () => {
-              //Gravando documento ao salvar novas infos
-              await db
-                .collection('users')
-                .doc('data')
-                .collection('profile')
-                .doc(user.uid)
-                .set({
-                  name: userName,
-                  gender: userGenre,
-                  birthDate: userBirthDate
-                })
-            })
-            .then(async () => {
-              await dispatch({
-                type: Types.USERINFO,
-                payload: {
-                  userName,
-                  userGenre,
-                  userBirthDate,
-                  userEmail
-                }
-              })
-            })
-            .catch(error => {
-              if (error.code === 'auth/invalid-email')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: 'Invalid email address format.'
-                })
+      const user = firebase.auth().currentUser
+      if (user) {
+        //Gravando documento ao salvar novas infos
+        await db
+          .collection('users')
+          .doc('data')
+          .collection('profile')
+          .doc(user.uid)
+          .set({
+            name: userName,
+            gender: userGenre,
+            birthDate: userBirthDate
+          })
 
-              if (error.code === 'auth/email-already-in-use')
-                dispatch({
-                  type: Types.ERROR,
-                  payload: 'This email is already in use.'
-                })
-            })
-        }
+        user.updateEmail(userEmail)
+
+        dispatch({
+          type: Types.USERINFO,
+          payload: {
+            userName,
+            userGenre,
+            userBirthDate,
+            userEmail
+          }
+        })
       }
-      dispatch(Creators.hideErrorMessage())
     }
   },
 
