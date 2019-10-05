@@ -10,6 +10,7 @@ import {
   StyledContainer,
   Form,
   Img,
+  ErrorMessage,
   ProfileInfo,
   EditProfileButton,
   SaveProfileButton,
@@ -23,8 +24,8 @@ class Profile extends Component {
       isDisabled: true,
       userName: props.authUser.userName,
       userEmail: props.authUser.userEmail,
-      userGenre: props.authUser.userGenre || null,
-      userBirthDate: props.authUser.userBirthDate || null
+      userGenre: props.authUser.userGenre || '',
+      userBirthDate: props.authUser.userBirthDate || ''
     }
   }
 
@@ -34,8 +35,11 @@ class Profile extends Component {
     const { userName, userGenre, userBirthDate, userEmail } = this.state
     const { handleUpdateProfile } = this.props
 
-    if (userName && userGenre && userBirthDate && userEmail) {
-      handleUpdateProfile(userName, userGenre, userBirthDate, userEmail)
+    await handleUpdateProfile(userName, userGenre, userBirthDate, userEmail)
+
+    const { errorMessage } = this.props
+
+    if (errorMessage === '') {
       this.setState({ isDisabled: true })
     }
   }
@@ -55,18 +59,37 @@ class Profile extends Component {
       userEmail
     } = this.state
 
+    const { errorMessage } = this.props
+
+    let editButton
+
+    if (isDisabled) {
+      if (userName && userGenre && userBirthDate && userEmail) {
+        editButton = (
+          <EditProfileButton onClick={this.handleForm}>Edit</EditProfileButton>
+        )
+      } else {
+        editButton = (
+          <EditProfileButton onClick={this.handleForm}>
+            Complete Profile
+          </EditProfileButton>
+        )
+      }
+    } else {
+      editButton = <SaveProfileButton type='submit'>Save</SaveProfileButton>
+    }
+
     return (
       <StyledContainer>
         <Form onSubmit={this.submitUserProfile}>
           <Img src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg' />
-
+          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <ProfileInfo
             disabled={isDisabled}
             value={userName}
             placeholder='Fill your display name*'
             onChange={e => this.setState({ userName: e.target.value })}
           />
-
           {(userGenre || !isDisabled) && (
             <ProfileInfo
               disabled={isDisabled}
@@ -75,7 +98,6 @@ class Profile extends Component {
               onChange={e => this.setState({ userGenre: e.target.value })}
             />
           )}
-
           {(userBirthDate || !isDisabled) && (
             <ProfileInfo
               disabled={isDisabled}
@@ -84,7 +106,6 @@ class Profile extends Component {
               onChange={e => this.setState({ userBirthDate: e.target.value })}
             />
           )}
-
           <ProfileInfo
             disabled={isDisabled}
             value={userEmail}
@@ -92,13 +113,8 @@ class Profile extends Component {
             onChange={e => this.setState({ userEmail: e.target.value })}
           />
 
-          {isDisabled ? (
-            <EditProfileButton onClick={this.handleForm}>
-              Edit
-            </EditProfileButton>
-          ) : (
-            <SaveProfileButton type='submit'>Save</SaveProfileButton>
-          )}
+          {editButton}
+
           <BackToHome>
             <Link to='/categories'>Back to home</Link>
           </BackToHome>
@@ -110,7 +126,8 @@ class Profile extends Component {
 
 const mapStateToProps = state => ({
   isLogged: state.auth.isLogged,
-  authUser: state.auth.authUser
+  authUser: state.auth.authUser,
+  errorMessage: state.auth.errorMessage
 })
 
 const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
