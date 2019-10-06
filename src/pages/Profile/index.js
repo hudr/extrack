@@ -12,6 +12,9 @@ import {
   Img,
   ErrorMessage,
   ProfileInfo,
+  ProfileSelect,
+  DateLabel,
+  BrithInfo,
   EditProfileButton,
   SaveProfileButton,
   BackToHome
@@ -48,6 +51,10 @@ class Profile extends Component {
     e.preventDefault()
     const { isDisabled } = this.state
     this.setState({ isDisabled: !isDisabled })
+  }
+
+  handleGenreChange(e) {
+    this.setState({ userGenre: e.target.value })
   }
 
   render() {
@@ -91,30 +98,43 @@ class Profile extends Component {
             onChange={e => this.setState({ userName: e.target.value })}
           />
           {(userGenre || !isDisabled) && (
-            <ProfileInfo
+            <ProfileSelect
               disabled={isDisabled}
-              value={userGenre}
-              placeholder='Insert your genre*'
-              onChange={e => this.setState({ userGenre: e.target.value })}
-            />
+              defaultValue={!userGenre ? 'default' : userGenre}
+              onChange={e => this.handleGenreChange(e)}
+            >
+              <option value='default' disabled>
+                Select your genre*
+              </option>
+              <option value='Man'>Man</option>
+              <option value='Woman'>Woman</option>
+              <option value='Trans'>Trans</option>
+              <option value='Agender'>Agender</option>
+              <option value='Bi-Gendered'>Bi-Gendered</option>
+              <option value='Non-Binary'>Non-Binary</option>
+              <option value='Androgyne'>Androgyne</option>
+              <option value='Androgynous'>Androgynous</option>
+            </ProfileSelect>
           )}
+
+          {!isDisabled && <DateLabel>Fill your birth date*</DateLabel>}
+
           {(userBirthDate || !isDisabled) && (
-            <ProfileInfo
+            <BrithInfo
+              type='date'
               disabled={isDisabled}
               value={userBirthDate}
-              placeholder='Insert your birth date*'
               onChange={e => this.setState({ userBirthDate: e.target.value })}
             />
           )}
+
           <ProfileInfo
             disabled={isDisabled}
             value={userEmail}
             placeholder='Fill your email*'
             onChange={e => this.setState({ userEmail: e.target.value })}
           />
-
           {editButton}
-
           <BackToHome>
             <Link to='/categories'>Back to home</Link>
           </BackToHome>
