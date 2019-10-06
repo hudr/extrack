@@ -4,6 +4,8 @@ import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import * as SweetAlert from '../../utils/SweetAlert'
+
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import {
@@ -43,6 +45,7 @@ class Profile extends Component {
     const { errorMessage } = this.props
 
     if (errorMessage === '') {
+      SweetAlert.profile()
       this.setState({ isDisabled: true })
     }
   }
