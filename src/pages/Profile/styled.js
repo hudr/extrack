@@ -43,6 +43,60 @@ export const ProfileInfo = styled.input`
   }
 `
 
+export const DateLabel = styled.p`
+  margin-top: 20px;
+  font-size: 13px;
+  text-align: center;
+  color: ${INPUT_TEXT_COLOR};
+`
+
+export const BrithInfo = styled.input`
+  margin-top: 10px;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 300px;
+  text-align: center;
+  color: ${INPUT_TEXT_COLOR};
+  padding: 15px 15px 15px 70px;
+  border: none;
+  background-color: rgba(255, 255, 255, 1);
+
+  ::placeholder {
+    color: ${INPUT_TEXT_COLOR};
+  }
+
+  :disabled {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+`
+
+export const ProfileSelect = styled.select`
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+
+  margin-top: 10px;
+  border-radius: 4px;
+  color: ${INPUT_TEXT_COLOR};
+  font-size: 16px;
+  padding: 15px 15px 15px 15px;
+  font-size: 16px;
+
+  text-align: center;
+  text-align-last: center;
+
+  border: none;
+  background-color: rgba(255, 255, 255, 1);
+
+  ::placeholder {
+    color: ${INPUT_TEXT_COLOR};
+  }
+
+  :disabled {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+`
+
 export const EditProfileButton = styled.button`
   margin-top: 20px;
   border: 0;
