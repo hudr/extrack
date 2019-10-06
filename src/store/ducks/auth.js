@@ -182,12 +182,6 @@ export const Creators = {
         await firebase
           .auth()
           .sendPasswordResetEmail(email)
-          .then(
-            dispatch({
-              type: Types.ERROR,
-              payload: ''
-            })
-          )
           .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
