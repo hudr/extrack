@@ -6,14 +6,14 @@ import PrivateRoute from './utils/PrivateRoute'
 //Components
 import Header from './components/Header'
 import Menu from './components/Menu'
+import Categories from './components/CategoryCards'
 
 //Pages
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Profile from './pages/Profile'
-
-import Categories from './components/CategoryCards'
+import NotFound from './pages/NotFound'
 
 const Routes = () => (
   <BrowserRouter>
@@ -80,7 +80,7 @@ const Routes = () => (
         )}
       />
 
-      <Route path='*' exact={true} component={() => <h1>Page not found!</h1>} />
+      <Route path='*' exact={true} component={NotFound} />
     </Switch>
   </BrowserRouter>
 )
