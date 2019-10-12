@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute'
 import Header from './components/Header'
 import Menu from './components/Menu'
 import Categories from './components/CategoryCards'
+import ProductForm from './components/ProductForm'
 
 //Pages
 import SignIn from './pages/SignIn'
@@ -39,7 +40,7 @@ const Routes = () => (
           <Fragment>
             <Header />
             <Menu />
-            <h1>Create</h1>
+            <ProductForm />
           </Fragment>
         )}
       />
