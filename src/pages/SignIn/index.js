@@ -72,7 +72,7 @@ class SignIn extends Component {
           <CreateAccount>
             <CreateAccountText>Don't have an account?</CreateAccountText>
             <CreateAccountButton>
-              <Link to='/signup'>Sign Up</Link>
+              <Link to='/signup'>Signup</Link>
             </CreateAccountButton>
           </CreateAccount>
         </Form>
