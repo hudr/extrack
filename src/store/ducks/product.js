@@ -26,11 +26,10 @@ export const Creators = {
       try {
         //Pegando todos os produtos
         const results = await AxiosProduct.getProducts()
-        //Filtrando apenas a partir do 1 (Bug sheetson)
-        const filtered = results.filter(result => result.rowIndex > 1)
+
         dispatch({
           type: Types.PRODUCTS,
-          payload: filtered
+          payload: results
         })
       } catch (err) {
         console.error(err)
