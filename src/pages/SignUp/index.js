@@ -76,7 +76,7 @@ class SignUp extends Component {
             onChange={e => this.setState({ confirmPassword: e.target.value })}
           />
 
-          <CreateAccountButton type='submit'>Sign Up</CreateAccountButton>
+          <CreateAccountButton type='submit'>Signup</CreateAccountButton>
           <GoToLoginLink>
             <Link to='/'>Already have an account? Go to login!</Link>
           </GoToLoginLink>

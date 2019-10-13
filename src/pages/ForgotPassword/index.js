@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
-import * as SweetAlert from '../../utils/SweetAlert'
+import { forgotpwSuccess } from '../../utils/SweetAlert'
 
 import logo from '../../assets/images/logo.png'
 
@@ -37,7 +37,7 @@ class ForgotPassword extends Component {
     const { errorMessage } = this.props
 
     if (errorMessage === '') {
-      SweetAlert.forgotpw()
+      forgotpwSuccess()
       this.props.history.push('/')
     }
   }

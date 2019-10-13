@@ -235,7 +235,8 @@ export const Creators = {
                   userName,
                   userGenre,
                   userBirthDate,
-                  userEmail
+                  userEmail,
+                  userUid: user.uid
                 }
               })
             })
@@ -281,7 +282,8 @@ export const Creators = {
                   userName: userName,
                   userGenre: gender,
                   userBirthDate: birthDate,
-                  userEmail: user.email
+                  userEmail: user.email,
+                  userUid: user.uid
                 }
               })
             } else {
