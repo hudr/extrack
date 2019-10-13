@@ -9,7 +9,12 @@ export const Types = {
 
 const INITIAL_STATE = {
   isLogged: false,
-  authUser: {},
+  authUser: {
+    // userUid: 'qpqwVNLhbqPQPdSyOBDfknBaCrf1',
+    // userName: 'Hudson',
+    // userBirthDate: '1995-02-23',
+    // userGenre: 'Man'
+  },
   errorMessage: ''
 }
 
