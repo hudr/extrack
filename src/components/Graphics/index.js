@@ -8,9 +8,20 @@ import { Creators as ProductActions } from '../../store/ducks/product'
 
 import { StyledContainer, Title, GoToProfile, ProductSelect } from './styled'
 
+import { filterUserProducts } from '../../utils/Convertion'
+
 class Graphics extends Component {
   state = {
-    userProducts: [],
+    userDataInfos: {
+      products: {
+        userProductsFromCategory: [],
+        totalValueFromCategory: [],
+        totalMediaFromCategory: []
+      },
+      categories: [],
+      totalProducts: 0,
+      totalValueFromAllProducts: 0
+    },
     pCategory: 'All'
   }
 
@@ -19,50 +30,36 @@ class Graphics extends Component {
       getProducts,
       authUser: { userUid }
     } = this.props
+
     await getProducts()
 
     const { products } = this.props
 
-    //UserProducts
-    const filteredUserProducts = products.filter(
-      product => product.userUid === userUid
-    )
-    this.setState({ userProducts: filteredUserProducts })
-    //End UserProducts
-  }
+    const filterProductsForUser = await filterUserProducts(products, userUid)
 
-  handleGenreChange(e) {
-    this.setState({ pCategory: e.target.value })
+    this.setState({
+      userDataInfos: filterProductsForUser
+    })
   }
 
   render() {
-    const { userProducts, pCategory } = this.state
+    const {
+      userDataInfos: {
+        products: {
+          totalProductsFromCategory,
+          totalValueFromCategory,
+          totalMediaFromCategory
+        },
+        categories,
+        totalProducts,
+        totalValueFromAllProducts
+      },
+      pCategory
+    } = this.state
     const {
       products,
       authUser: { userUid, userGenre, userBirthDate }
     } = this.props
-
-    //USUARIO
-    const categoria = userProducts.filter(
-      product => product.pCategory === pCategory
-    )
-
-    const valorTotal =
-      pCategory === 'All'
-        ? userProducts.map(
-            product => Number(product.pPrice) * Number(product.pQuantity)
-          )
-        : categoria.map(
-            product => Number(product.pPrice) * Number(product.pQuantity)
-          )
-
-    const soma = valorTotal.reduce((acc, product) => product + acc, 0)
-
-    const media = (soma / valorTotal.length).toLocaleString('pt-BR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })
-    ///////////////////////////////////////////////////////////////////////
 
     //ALL
     const allProducts = products.filter(product => product.userUid !== userUid)
@@ -105,32 +102,34 @@ class Graphics extends Component {
           <Fragment>
             <Title>Hello to your graphics</Title>
 
-            <ProductSelect
-              value={pCategory}
-              onChange={e => this.handleGenreChange(e)}
-            >
-              <option value='All'>All</option>
-              <option value='Food'>Food</option>
-              <option value='House'>House</option>
-              <option value='Vehicle'>Vehicle</option>
-              <option value='Health'>Health</option>
-              <option value='Beauty'>Beauty</option>
-              <option value='Personal'>Personal</option>
-            </ProductSelect>
-
-            <div style={{ marginTop: '50px' }}>
-              <h3>User:</h3>
-              <h4>Produtos: {valorTotal.length}</h4>
-              <h4>Valor Total: R${soma}</h4>
-              <h4>Média: R${media}</h4>
-            </div>
-
-            <div style={{ marginTop: '50px' }}>
-              <h3>All: </h3>
-              <h4>Produtos: {allValorTotal.length}</h4>
-              <h4>Valor Total: R${allSoma}</h4>
-              <h4>Média: R${allMedia}</h4>
-            </div>
+            <ul>
+              {totalMediaFromCategory.map((media, i) => (
+                <li
+                  key={i}
+                  style={{
+                    listStyleType: 'decimal-leading-zero',
+                    marginTop: '10px'
+                  }}
+                >
+                  {totalProductsFromCategory[i] === 0 ? (
+                    <div>
+                      Insira produtos na categoria {categories[i]} para ver sua
+                      média.
+                    </div>
+                  ) : (
+                    <div>
+                      Categoria: {categories[i]} | Produtos:{' '}
+                      {totalProductsFromCategory[i]} | Total: R${' '}
+                      {totalValueFromCategory[i]} | Média: R${media}
+                    </div>
+                  )}
+                </li>
+              ))}
+              <h4 style={{ marginTop: '20px' }}>
+                Qtd. de Produtos: {totalProducts} | Total R$
+                {totalValueFromAllProducts}
+              </h4>
+            </ul>
           </Fragment>
         )}
       </StyledContainer>
