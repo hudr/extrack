@@ -26,10 +26,7 @@ export const filterUserProducts = async (products, userUid) => {
             parseFloat(multiply.pQuantity) * parseFloat(multiply.pPrice)
         )
         .reduce((acc, product) => product + acc, 0)
-        .toLocaleString('pt-BR', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        })
+        .toFixed(2)
   )
 
   const totalProductsFromCategory = userProductsFromCategory.map(
@@ -41,8 +38,7 @@ export const filterUserProducts = async (products, userUid) => {
 
   const totalMediaFromCategory = () => {
     const result = totalValueFromCategory.map((total, i) => {
-      console.log(total)
-      //   return parseFloat(total) / parseFloat(totalProductsFromCategory[i])
+      return (parseFloat(total) / totalProductsFromCategory[i]).toFixed(2)
     })
     return result
   }
