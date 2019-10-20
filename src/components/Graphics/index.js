@@ -6,9 +6,12 @@ import { bindActionCreators } from 'redux'
 
 import { Creators as ProductActions } from '../../store/ducks/product'
 
-import { StyledContainer, Title, GoToProfile, ProductSelect } from './styled'
+import { StyledContainer, Title, GoToProfile } from './styled'
 
-import { filterUserProducts } from '../../utils/Convertion'
+import {
+  filterUserProducts,
+  filterAllUserProducts
+} from '../../utils/Convertion'
 
 class Graphics extends Component {
   state = {
@@ -22,24 +25,54 @@ class Graphics extends Component {
       totalProducts: 0,
       totalValueFromAllProducts: 0
     },
-    pCategory: 'All'
+
+    allDataInfos: {
+      products: {
+        allProductsFromCategory: [],
+        allTotalValueFromCategory: [],
+        allTotalMediaFromCategory: []
+      },
+      allCategories: [],
+      allTotalProducts: 0,
+      allTotalValueFromAllProducts: 0
+    },
+
+    hasProducts: false
   }
 
   async componentDidMount() {
     const {
       getProducts,
-      authUser: { userUid }
+      authUser: { userUid, userGenre, userBirthDate }
     } = this.props
 
     await getProducts()
 
     const { products } = this.props
 
-    const filterProductsForUser = await filterUserProducts(products, userUid)
+    const userHasProducts = products.filter(
+      product => product.userUid === userUid
+    )
 
-    this.setState({
-      userDataInfos: filterProductsForUser
-    })
+    if (userHasProducts.length > 0 && userGenre && userBirthDate) {
+      const filterProductsForUser = await filterUserProducts(products, userUid)
+      const filterAllProducts = await filterAllUserProducts(
+        products,
+        userUid,
+        userGenre,
+        userBirthDate
+      )
+
+      this.setState({
+        userDataInfos: filterProductsForUser,
+        allDataInfos: filterAllProducts,
+        hasProducts: true
+      })
+    } else {
+      this.setState({
+        hasProducts: false
+      })
+    }
   }
 
   render() {
@@ -54,39 +87,23 @@ class Graphics extends Component {
         totalProducts,
         totalValueFromAllProducts
       },
-      pCategory
+
+      allDataInfos: {
+        products: {
+          allTotalProductsFromCategory,
+          allTotalValueFromCategory,
+          allTotalMediaFromCategory
+        },
+        allCategories,
+        allTotalProducts,
+        allTotalValueFromAllProducts
+      },
+      hasProducts
     } = this.state
     const {
-      products,
-      authUser: { userUid, userGenre, userBirthDate }
+      authUser: { userGenre, userBirthDate }
     } = this.props
 
-    //ALL
-    const allProducts = products.filter(product => product.userUid !== userUid)
-
-    const allCategoria = allProducts.filter(
-      product => product.pCategory === pCategory
-    )
-
-    const allValorTotal =
-      pCategory === 'All'
-        ? allProducts.map(
-            product => Number(product.pPrice) * Number(product.pQuantity)
-          )
-        : allCategoria.map(
-            product => Number(product.pPrice) * Number(product.pQuantity)
-          )
-
-    const allSoma = allValorTotal.reduce((acc, product) => product + acc, 0)
-
-    const allMedia = (Number(allSoma) / allValorTotal.length).toLocaleString(
-      'pt-BR',
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }
-    )
-    ///////////////////////////////////////////////////////////////////////
     return (
       <StyledContainer>
         {!userGenre && !userBirthDate ? (
@@ -98,16 +115,14 @@ class Graphics extends Component {
               <Link to='/profile'>Go to profile</Link>
             </GoToProfile>
           </Fragment>
-        ) : (
+        ) : hasProducts ? (
           <Fragment>
             <Title>Hello to your graphics</Title>
-
             <ul>
               {totalMediaFromCategory.map((media, i) => (
                 <li
                   key={i}
                   style={{
-                    listStyleType: 'decimal-leading-zero',
                     marginTop: '10px'
                   }}
                 >
@@ -129,7 +144,43 @@ class Graphics extends Component {
                 Qtd. de Produtos: {totalProducts} | Total R$
                 {totalValueFromAllProducts}
               </h4>
+
+              {/* ALL PRODUCTS PART */}
+              {allTotalMediaFromCategory.map((media, i) => (
+                <li
+                  key={i}
+                  style={{
+                    marginTop: '10px'
+                  }}
+                >
+                  {allTotalProductsFromCategory[i] === 0 ? (
+                    <div>
+                      Nenhum usuário com seu perfil tem produtos na categoria{' '}
+                      {allCategories[i]}.
+                    </div>
+                  ) : (
+                    <div>
+                      Categoria: {allCategories[i]} | Produtos:{' '}
+                      {allTotalProductsFromCategory[i]} | Total: R${' '}
+                      {allTotalValueFromCategory[i]} | Média: R${media}
+                    </div>
+                  )}
+                </li>
+              ))}
+              <h4 style={{ marginTop: '20px' }}>
+                Qtd. de Produtos: {allTotalProducts} | Total R$
+                {allTotalValueFromAllProducts}
+              </h4>
             </ul>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Title>
+              You can't see graphics yet. Please register any product.
+            </Title>
+            <GoToProfile>
+              <Link to='/create'>Add your first product</Link>
+            </GoToProfile>
           </Fragment>
         )}
       </StyledContainer>
