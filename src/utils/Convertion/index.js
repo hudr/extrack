@@ -63,7 +63,7 @@ export const filterUserProducts = async (products, userUid) => {
       })
   }
 
-  //console.log('user inside function', userProductsData)
+  // console.log('user inside function', userProductsData)
 
   return userProductsData
 }
@@ -145,7 +145,7 @@ export const filterAllUserProducts = async (
       })
   }
 
-  //console.log('all inside function', allProductsData)
+  // console.log('all inside function', allProductsData)
 
   return allProductsData
 }
