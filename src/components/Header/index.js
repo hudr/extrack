@@ -47,10 +47,12 @@ class Header extends Component {
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
-            <Img
-              src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg'
-              alt='Avatar'
-            />
+            {authUser.userImage && (
+              <Img
+                src={`data:image/png;base64, ${authUser.userImage}`}
+                alt='Avatar'
+              />
+            )}
 
             <Arrow onClick={() => this.setState({ isOpen: !isOpen })} />
             <Dropdown isVisible={isOpen}>
