@@ -6,6 +6,8 @@ import { bindActionCreators } from 'redux'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
+import { alertErrorMessage } from '../../utils/SweetAlert'
+
 import logo from '../../assets/images/logo.png'
 
 import {
@@ -14,8 +16,7 @@ import {
   Img,
   Input,
   CreateAccountButton,
-  GoToLoginLink,
-  ErrorMessage
+  GoToLoginLink
 } from './styled'
 
 class SignUp extends Component {
@@ -35,6 +36,12 @@ class SignUp extends Component {
 
     await handleSignUp(email, password, confirmPassword, firstName)
 
+    const { errorMessage } = this.props
+
+    if (errorMessage !== '') {
+      alertErrorMessage(errorMessage)
+    }
+
     const { isLogged } = this.props
 
     if (isLogged === true) {
@@ -44,14 +51,11 @@ class SignUp extends Component {
 
   render() {
     const { firstName, email, password, confirmPassword } = this.state
-    const { errorMessage } = this.props
 
     return (
       <StyledContainer>
         <Form onSubmit={this.handleSignUp}>
           <Img src={logo} />
-
-          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
           <Input
             placeholder='First Name'

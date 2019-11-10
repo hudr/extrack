@@ -122,13 +122,3 @@ export const CreateAccountButton = styled.button`
     background: #9e1ee7;
   }
 `
-
-export const ErrorMessage = styled.div`
-  width: 100%;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  font-size: 13px;
-  background-color: rgba(255, 0, 0, 0.6);
-  color: white;
-`

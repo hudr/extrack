@@ -8,7 +8,7 @@ import Header from './components/Header'
 import Menu from './components/Menu'
 import Categories from './components/CategoryCards'
 import ProductForm from './components/ProductForm'
-import Graphics from './components/Graphics'
+import Comparative from './components/Comparative'
 
 //Pages
 import SignIn from './pages/SignIn'
@@ -60,12 +60,12 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/graphics'
+        path='/comparative'
         component={() => (
           <Fragment>
             <Header />
             <Menu />
-            <Graphics />
+            <Comparative />
           </Fragment>
         )}
       />

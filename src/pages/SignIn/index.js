@@ -5,6 +5,9 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
+import { Creators as ProductActions } from '../../store/ducks/product'
+
+import { alertErrorMessage } from '../../utils/SweetAlert'
 
 import logo from '../../assets/images/logo.png'
 
@@ -17,8 +20,7 @@ import {
   ForgotLink,
   CreateAccount,
   CreateAccountText,
-  CreateAccountButton,
-  ErrorMessage
+  CreateAccountButton
 } from './styled'
 
 class SignIn extends Component {
@@ -31,27 +33,31 @@ class SignIn extends Component {
     e.preventDefault()
 
     const { email, password } = this.state
-    const { handleLogin, handleUserInfo } = this.props
+    const { handleLogin } = this.props
 
     await handleLogin(email, password)
 
-    const { isLogged } = this.props
+    const { errorMessage } = this.props
+
+    if (errorMessage !== '') {
+      alertErrorMessage(errorMessage)
+    }
+
+    const { isLogged, getProducts } = this.props
 
     if (isLogged === true) {
-      await handleUserInfo()
+      await getProducts()
       this.props.history.push('/categories')
     }
   }
 
   render() {
     const { email, password } = this.state
-    const { errorMessage } = this.props
 
     return (
       <StyledContainer>
         <Form onSubmit={this.handleSignIn}>
           <Img src={logo} />
-          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Input
             placeholder='Username'
             value={email}
@@ -87,7 +93,8 @@ const mapStateToProps = state => ({
   errorMessage: state.auth.errorMessage
 })
 
-const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ ...AuthActions, ...ProductActions }, dispatch)
 
 export default connect(
   mapStateToProps,

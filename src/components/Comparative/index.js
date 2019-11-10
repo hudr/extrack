@@ -29,7 +29,7 @@ import {
   filterAllUserProducts
 } from '../../utils/Convertion'
 
-class Graphics extends Component {
+class Comparative extends Component {
   state = {
     userDataInfos: {
       products: {
@@ -52,17 +52,13 @@ class Graphics extends Component {
       allTotalProducts: 0,
       allTotalValueFromAllProducts: 0
     },
-
     hasProducts: false
   }
 
   async componentDidMount() {
     const {
-      getProducts,
       authUser: { userUid, userGenre, userBirthDate }
     } = this.props
-
-    await getProducts()
 
     const { products } = this.props
 
@@ -118,7 +114,7 @@ class Graphics extends Component {
         {!userGenre && !userBirthDate ? (
           <Fragment>
             <Title>
-              You can't see graphics yet. Please complete your profile.
+              You can't see comparative yet. Please complete your profile.
             </Title>
             <GoToProfile>
               <Link to='/profile'>Go to profile</Link>
@@ -451,7 +447,7 @@ class Graphics extends Component {
         ) : (
           <Fragment>
             <Title>
-              You can't see graphics yet. Please register any product.
+              You can't see comparative yet. Please register any product.
             </Title>
             <GoToProfile>
               <Link to='/create'>Add your first product</Link>
@@ -474,4 +470,4 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Graphics)
+)(Comparative)
