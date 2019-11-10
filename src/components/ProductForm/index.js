@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 
 import { Creators as ProductActions } from '../../store/ducks/product'
 
-import { productSuccess, productError } from '../../utils/SweetAlert'
+import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
 import {
   StyledContainer,
@@ -59,7 +59,7 @@ class ProductForm extends Component {
         updatedAt: new Date()
       })
 
-      productSuccess()
+      alertSuccessMessage('Product has been created')
 
       this.setState({
         pName: '',
@@ -68,7 +68,7 @@ class ProductForm extends Component {
         pPrice: ''
       })
     } else {
-      productError()
+      alertErrorMessage('Please, fill all required fields')
     }
   }
 

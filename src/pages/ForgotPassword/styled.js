@@ -79,13 +79,3 @@ export const BackToHome = styled.div`
     color: ${FORGOT_LINK_COLOR};
   }
 `
-
-export const ErrorMessage = styled.div`
-  width: 100%;
-  padding: 10px;
-  text-align: center;
-  border-radius: 5px;
-  font-size: 13px;
-  background-color: rgba(255, 0, 0, 0.6);
-  color: white;
-`

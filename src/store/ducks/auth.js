@@ -18,7 +18,7 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.LOGIN:
       return {
         ...state,
-        isLogged: action.payload,
+        isLogged: true,
         errorMessage: ''
       }
     case Types.USERINFO:
@@ -45,23 +45,10 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  hideErrorMessage: () => {
-    return dispatch => {
-      setTimeout(() => {
-        dispatch({
-          type: Types.ERROR,
-          payload: ''
-        })
-      }, 5000)
-    }
-  },
-
   handleSignUp: (email, password, confirmPassword, firstName) => {
     return async dispatch => {
-      //Instancia do Firestore
       const db = firebase.firestore()
 
-      //Condições de campos vazios
       if (!email || !password || !confirmPassword || !firstName) {
         dispatch({
           type: Types.ERROR,
@@ -73,11 +60,10 @@ export const Creators = {
           payload: 'Passwords need to be equal.'
         })
       } else {
-        //Gravando documento ao criar conta
         await firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
-          .then(function(user) {
+          .then(user => {
             db.collection('users')
               .doc('data')
               .collection('profile')
@@ -93,7 +79,7 @@ export const Creators = {
               }
             })
           })
-          .catch(function(error) {
+          .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
                 type: Types.ERROR,
@@ -119,7 +105,6 @@ export const Creators = {
               })
           })
       }
-      dispatch(Creators.hideErrorMessage())
     }
   },
 
@@ -134,13 +119,16 @@ export const Creators = {
         await firebase
           .auth()
           .signInWithEmailAndPassword(email, password)
-          .then(() =>
-            dispatch({
-              type: Types.LOGIN,
-              payload: true
-            })
+          .then(async () => {
+            await dispatch(Creators.handleUserInfo())
+          })
+          .then(
+            async () =>
+              await dispatch({
+                type: Types.LOGIN,
+                payload: true
+              })
           )
-
           .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
@@ -167,7 +155,6 @@ export const Creators = {
               })
           })
       }
-      dispatch(Creators.hideErrorMessage())
     }
   },
 
@@ -196,7 +183,6 @@ export const Creators = {
               })
           })
       }
-      dispatch(Creators.hideErrorMessage())
     }
   },
 
@@ -255,7 +241,6 @@ export const Creators = {
             })
         }
       }
-      dispatch(Creators.hideErrorMessage())
     }
   },
 
