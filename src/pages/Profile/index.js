@@ -4,15 +4,16 @@ import { Link, withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import { profileSuccess } from '../../utils/SweetAlert'
+import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
+
+import { format } from 'date-fns'
 
 import {
   StyledContainer,
   Form,
   Img,
-  ErrorMessage,
   ProfileInfo,
   ProfileSelect,
   DateLabel,
@@ -45,8 +46,10 @@ class Profile extends Component {
     const { errorMessage } = this.props
 
     if (errorMessage === '') {
-      profileSuccess()
+      alertSuccessMessage('Your profile has been updated')
       this.setState({ isDisabled: true })
+    } else {
+      alertErrorMessage(errorMessage)
     }
   }
 
@@ -69,9 +72,9 @@ class Profile extends Component {
       userEmail
     } = this.state
 
-    const { errorMessage } = this.props
-
     let editButton
+
+    let maxDate = format(new Date(), 'yyyy-MM-dd')
 
     if (isDisabled) {
       if (userName && userGenre && userBirthDate && userEmail) {
@@ -93,7 +96,7 @@ class Profile extends Component {
       <StyledContainer>
         <Form onSubmit={this.submitUserProfile}>
           <Img src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg' />
-          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
           <ProfileInfo
             disabled={isDisabled}
             value={userName}
@@ -125,6 +128,7 @@ class Profile extends Component {
           {(userBirthDate || !isDisabled) && (
             <BrithInfo
               type='date'
+              max={maxDate}
               disabled={isDisabled}
               value={userBirthDate}
               onChange={e => this.setState({ userBirthDate: e.target.value })}

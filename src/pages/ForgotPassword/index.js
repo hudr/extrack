@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
-import { forgotpwSuccess } from '../../utils/SweetAlert'
+import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
 import logo from '../../assets/images/logo.png'
 
@@ -16,7 +16,6 @@ import {
   Img,
   Input,
   RecoveryButton,
-  ErrorMessage,
   BackToHome
 } from './styled'
 
@@ -37,22 +36,20 @@ class ForgotPassword extends Component {
     const { errorMessage } = this.props
 
     if (errorMessage === '') {
-      forgotpwSuccess()
+      alertSuccessMessage('Your reset email has been sent')
       this.props.history.push('/')
+    } else {
+      alertErrorMessage(errorMessage)
     }
   }
 
   render() {
     const { email } = this.state
 
-    const { errorMessage } = this.props
-
     return (
       <StyledContainer>
         <Form onSubmit={this.handleForgotPassword}>
           <Img src={logo} />
-
-          {errorMessage !== '' && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
           <Input
             placeholder='Type your email'

@@ -31,8 +31,8 @@ export default class Menu extends Component {
             </List>
             <List>
               <MenuLink>
-                <NavLink activeClassName='current' to='/graphics'>
-                  Graphics
+                <NavLink activeClassName='current' to='/comparative'>
+                  Comparative
                 </NavLink>
               </MenuLink>
             </List>

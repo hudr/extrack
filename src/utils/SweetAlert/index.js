@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2'
 
-export const forgotpwSuccess = () => {
+export const alertSuccessMessage = message => {
   Swal.fire({
     type: 'success',
-    title: 'Your reset email has been sent',
+    title: message,
     showConfirmButton: false,
     timer: 3000,
     width: '300px',
@@ -15,40 +15,10 @@ export const forgotpwSuccess = () => {
   })
 }
 
-export const profileSuccess = () => {
-  Swal.fire({
-    type: 'success',
-    title: 'Your profile has been updated',
-    showConfirmButton: false,
-    timer: 3000,
-    width: '300px',
-    backdrop: `
-      rgba(0,0,0,0.7)
-      center left
-      no-repeat
-    `
-  })
-}
-
-export const productSuccess = () => {
-  Swal.fire({
-    type: 'success',
-    title: 'Product has been created',
-    showConfirmButton: false,
-    timer: 3000,
-    width: '300px',
-    backdrop: `
-      rgba(0,0,0,0.7)
-      center left
-      no-repeat
-    `
-  })
-}
-
-export const productError = () => {
+export const alertErrorMessage = message => {
   Swal.fire({
     type: 'error',
-    title: 'Please, fill all required fields',
+    title: message,
     showConfirmButton: false,
     timer: 3000,
     width: '300px',

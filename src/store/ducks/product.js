@@ -24,9 +24,7 @@ export const Creators = {
   getProducts: () => {
     return async dispatch => {
       try {
-        //Pegando todos os produtos
         const results = await AxiosProduct.getProducts()
-
         dispatch({
           type: Types.PRODUCTS,
           payload: results
@@ -38,8 +36,9 @@ export const Creators = {
   },
 
   submitUserProduct: productData => {
-    return async () => {
+    return async dispatch => {
       await AxiosProduct.insertProduct(productData)
+      await dispatch(Creators.getProducts())
     }
   }
 }
