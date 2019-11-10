@@ -1,4 +1,5 @@
 import firebase from '../../config/Firebase'
+import * as AxiosProduct from '../../service/Axios'
 
 export const Types = {
   LOGIN: 'auth/LOGIN',
@@ -45,10 +46,9 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  handleSignUp: (email, password, confirmPassword, firstName) => {
+  handleSignUp: (email, password, confirmPassword, firstName, userImage) => {
     return async dispatch => {
       const db = firebase.firestore()
-
       if (!email || !password || !confirmPassword || !firstName) {
         dispatch({
           type: Types.ERROR,
@@ -63,7 +63,13 @@ export const Creators = {
         await firebase
           .auth()
           .createUserWithEmailAndPassword(email, password)
-          .then(user => {
+          .then(async user => {
+            const userUid = user.user.uid
+            const base64URL = await AxiosProduct.registerProfilePicture({
+              userUid,
+              userImage
+            })
+
             db.collection('users')
               .doc('data')
               .collection('profile')
@@ -75,7 +81,8 @@ export const Creators = {
               type: Types.USERINFO,
               payload: {
                 userName: firstName,
-                userEmail: email
+                userEmail: email,
+                userImage: base64URL
               }
             })
           })
@@ -186,9 +193,14 @@ export const Creators = {
     }
   },
 
-  handleUpdateProfile: (userName, userGenre, userBirthDate, userEmail) => {
+  handleUpdateProfile: (
+    userName,
+    userGenre,
+    userBirthDate,
+    userEmail,
+    userImage
+  ) => {
     return async dispatch => {
-      //Instancia do Firestore
       const db = firebase.firestore()
 
       if (!userName || !userGenre || !userBirthDate || !userEmail) {
@@ -199,10 +211,15 @@ export const Creators = {
       } else {
         const user = firebase.auth().currentUser
         if (user) {
+          const userUid = user.uid
+          const base64URL = await AxiosProduct.updateProfilePicture({
+            userUid,
+            userImage
+          })
+
           await user
             .updateEmail(userEmail)
             .then(async () => {
-              //Gravando documento ao salvar novas infos
               await db
                 .collection('users')
                 .doc('data')
@@ -222,7 +239,8 @@ export const Creators = {
                   userGenre,
                   userBirthDate,
                   userEmail,
-                  userUid: user.uid
+                  userUid,
+                  userImage: base64URL
                 }
               })
             })
@@ -248,6 +266,12 @@ export const Creators = {
     return async dispatch => {
       const user = firebase.auth().currentUser
       if (user) {
+        //Pegando imagem do usuário
+        const allUsersImage = await AxiosProduct.getProfilePicture()
+        const userImage = allUsersImage.filter(
+          base64 => base64.userUid === user.uid
+        )[0].userImage
+
         const db = firebase.firestore()
         const docRef = db
           .collection('users')
@@ -268,7 +292,8 @@ export const Creators = {
                   userGenre: gender,
                   userBirthDate: birthDate,
                   userEmail: user.email,
-                  userUid: user.uid
+                  userUid: user.uid,
+                  userImage: userImage
                 }
               })
             } else {

@@ -31,17 +31,31 @@ class Profile extends Component {
       userName: props.authUser.userName,
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
-      userBirthDate: props.authUser.userBirthDate || ''
+      userBirthDate: props.authUser.userBirthDate || '',
+      userImage: props.authUser.userImage
     }
   }
 
   submitUserProfile = async e => {
     e.preventDefault()
 
-    const { userName, userGenre, userBirthDate, userEmail } = this.state
+    const {
+      userName,
+      userGenre,
+      userBirthDate,
+      userEmail,
+      userImage
+    } = this.state
+
     const { handleUpdateProfile } = this.props
 
-    await handleUpdateProfile(userName, userGenre, userBirthDate, userEmail)
+    await handleUpdateProfile(
+      userName,
+      userGenre,
+      userBirthDate,
+      userEmail,
+      userImage
+    )
 
     const { errorMessage } = this.props
 
@@ -63,13 +77,42 @@ class Profile extends Component {
     this.setState({ userGenre: e.target.value })
   }
 
+  handleBase64 = async e => {
+    const file = e.target.files[0]
+    const reader = new FileReader()
+
+    reader.readAsDataURL(file)
+    reader.onload = async () => {
+      const fileInfo = {
+        name: file.name,
+        type: file.type,
+        size: Math.round(file.size / 1000),
+        base64: reader.result.split(',')[1],
+        file: file
+      }
+
+      if (fileInfo.size <= 2000) {
+        if (fileInfo.type === 'image/png' || 'image/jpg' || 'image/jpeg') {
+          this.setState({
+            userImage: fileInfo.base64
+          })
+        } else {
+          alertErrorMessage('Unsupported format.')
+        }
+      } else {
+        alertErrorMessage('This image is too large. Max: 2MB.')
+      }
+    }
+  }
+
   render() {
     const {
       isDisabled,
       userName,
       userGenre,
       userBirthDate,
-      userEmail
+      userEmail,
+      userImage
     } = this.state
 
     let editButton
@@ -95,8 +138,19 @@ class Profile extends Component {
     return (
       <StyledContainer>
         <Form onSubmit={this.submitUserProfile}>
-          <Img src='https://neo-labor.com/wp-content/uploads/2016/08/13.jpg' />
-
+          <input
+            style={{ display: 'none' }}
+            accept='image/*'
+            ref='imageUpload'
+            type='file'
+            onChange={this.handleBase64}
+            multiple={false}
+            disabled={isDisabled}
+          />
+          <Img
+            onClick={() => this.refs.imageUpload.click()}
+            src={`data:image/png;base64, ${userImage}`}
+          />
           <ProfileInfo
             disabled={isDisabled}
             value={userName}
@@ -122,9 +176,7 @@ class Profile extends Component {
               <option value='Androgynous'>Androgynous</option>
             </ProfileSelect>
           )}
-
           {!isDisabled && <DateLabel>Fill your birth date*</DateLabel>}
-
           {(userBirthDate || !isDisabled) && (
             <BrithInfo
               type='date'
@@ -134,7 +186,6 @@ class Profile extends Component {
               onChange={e => this.setState({ userBirthDate: e.target.value })}
             />
           )}
-
           <ProfileInfo
             disabled={isDisabled}
             value={userEmail}
