@@ -8,6 +8,8 @@ import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import { alertErrorMessage } from '../../utils/SweetAlert'
 
+import Loader from '../../components/Loader'
+
 import logo from '../../assets/images/logo.png'
 
 import {
@@ -40,7 +42,10 @@ class SignUp extends Component {
       userImage
     } = this.state
 
-    const { handleSignUp } = this.props
+    const { handleSignUp, handleLoader } = this.props
+
+    //Começando carregar
+    await handleLoader(true)
 
     await handleSignUp(email, password, confirmPassword, firstName, userImage)
 
@@ -55,12 +60,18 @@ class SignUp extends Component {
     if (isLogged === true) {
       this.props.history.push('/categories')
     }
+
+    //Começando carregar
+    await handleLoader(false)
   }
 
   render() {
+    const { isLoading } = this.props
     const { firstName, email, password, confirmPassword } = this.state
 
-    return (
+    return isLoading ? (
+      <Loader />
+    ) : (
       <StyledContainer>
         <Form onSubmit={this.handleSignUp}>
           <Img src={logo} />
@@ -100,6 +111,7 @@ class SignUp extends Component {
 
 const mapStateToProps = state => ({
   authUser: state.auth.authUser,
+  isLoading: state.auth.isLoading,
   isLogged: state.auth.isLogged,
   errorMessage: state.auth.errorMessage
 })

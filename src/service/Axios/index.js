@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const sheetson = axios.create({
-  baseURL: 'https://cors-anywhere.herokuapp.com/https://api.sheetson.com/'
+  baseURL: 'https://api.sheetson.com/'
 })
 
 const API_VERSION = 'v1'

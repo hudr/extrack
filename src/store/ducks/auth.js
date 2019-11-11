@@ -2,6 +2,7 @@ import firebase from '../../config/Firebase'
 import * as AxiosProduct from '../../service/Axios'
 
 export const Types = {
+  LOADING: 'auth/LOADING',
   LOGIN: 'auth/LOGIN',
   LOGOUT: 'auth/LOGOUT',
   USERINFO: 'auth/USERINFO',
@@ -10,12 +11,18 @@ export const Types = {
 
 const INITIAL_STATE = {
   isLogged: false,
+  isLoading: false,
   authUser: {},
   errorMessage: ''
 }
 
 export default function reducer(state = INITIAL_STATE, action) {
   switch (action.type) {
+    case Types.LOADING:
+      return {
+        ...state,
+        isLoading: action.payload
+      }
     case Types.LOGIN:
       return {
         ...state,
@@ -330,6 +337,15 @@ export const Creators = {
       } catch (err) {
         console.log(err)
       }
+    }
+  },
+
+  handleLoader: status => {
+    return async dispatch => {
+      dispatch({
+        type: Types.LOADING,
+        payload: status
+      })
     }
   }
 }
