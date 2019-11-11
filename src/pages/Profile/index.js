@@ -6,6 +6,8 @@ import { bindActionCreators } from 'redux'
 
 import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
+import Loader from '../../components/Loader'
+
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
 import { format } from 'date-fns'
@@ -47,7 +49,10 @@ class Profile extends Component {
       userImage
     } = this.state
 
-    const { handleUpdateProfile } = this.props
+    const { handleUpdateProfile, handleLoader } = this.props
+
+    //Começando carregar
+    await handleLoader(true)
 
     await handleUpdateProfile(
       userName,
@@ -65,6 +70,9 @@ class Profile extends Component {
     } else {
       alertErrorMessage(errorMessage)
     }
+
+    //Terminando carregar
+    await handleLoader(false)
   }
 
   handleForm = async e => {
@@ -106,6 +114,8 @@ class Profile extends Component {
   }
 
   render() {
+    const { isLoading } = this.props
+
     const {
       isDisabled,
       userName,
@@ -135,7 +145,9 @@ class Profile extends Component {
       editButton = <SaveProfileButton type='submit'>Save</SaveProfileButton>
     }
 
-    return (
+    return isLoading ? (
+      <Loader />
+    ) : (
       <StyledContainer>
         <Form onSubmit={this.submitUserProfile}>
           <input
@@ -203,6 +215,7 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
+  isLoading: state.auth.isLoading,
   isLogged: state.auth.isLogged,
   authUser: state.auth.authUser,
   errorMessage: state.auth.errorMessage

@@ -9,6 +9,8 @@ import { Creators as ProductActions } from '../../store/ducks/product'
 
 import { alertErrorMessage } from '../../utils/SweetAlert'
 
+import Loader from '../../components/Loader'
+
 import logo from '../../assets/images/logo.png'
 
 import {
@@ -33,7 +35,10 @@ class SignIn extends Component {
     e.preventDefault()
 
     const { email, password } = this.state
-    const { handleLogin } = this.props
+    const { handleLogin, handleLoader } = this.props
+
+    //Começando carregar
+    await handleLoader(true)
 
     await handleLogin(email, password)
 
@@ -49,12 +54,18 @@ class SignIn extends Component {
       await getProducts()
       this.props.history.push('/categories')
     }
+
+    //Terminando carregar
+    await handleLoader(false)
   }
 
   render() {
+    const { isLoading } = this.props
     const { email, password } = this.state
 
-    return (
+    return isLoading ? (
+      <Loader />
+    ) : (
       <StyledContainer>
         <Form onSubmit={this.handleSignIn}>
           <Img src={logo} />
@@ -88,6 +99,7 @@ class SignIn extends Component {
 }
 
 const mapStateToProps = state => ({
+  isLoading: state.auth.isLoading,
   isLogged: state.auth.isLogged,
   authUser: state.auth.authUser,
   errorMessage: state.auth.errorMessage
