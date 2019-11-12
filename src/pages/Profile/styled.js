@@ -18,6 +18,7 @@ export const Form = styled.form`
 
 export const Img = styled.img`
   width: 13vh;
+  height: 13vh;
   margin: 0 auto;
   align-self: center;
   margin-bottom: 20px;
