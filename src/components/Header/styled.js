@@ -31,6 +31,7 @@ export const Subtitle = styled.p`
 export const Img = styled.img`
   border-radius: 50%;
   width: 40px;
+  height: 40px;
 `
 
 export const Dropdown = styled.div`

@@ -10,8 +10,6 @@ import Loader from '../../components/Loader'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
-import { INITIAL_IMAGE } from '../../utils/Constants'
-
 import { format } from 'date-fns'
 
 import {
@@ -36,7 +34,7 @@ class Profile extends Component {
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
       userBirthDate: props.authUser.userBirthDate || '',
-      userImage: INITIAL_IMAGE
+      userImage: ''
     }
   }
 

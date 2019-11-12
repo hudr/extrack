@@ -238,6 +238,8 @@ export const Creators = {
     return async dispatch => {
       const db = firebase.firestore()
 
+      const hasBase64 = userImageBase64 ? true : false
+
       if (!userName || !userGenre || !userBirthDate || !userEmail) {
         await dispatch({
           type: Types.ERROR,
@@ -251,20 +253,31 @@ export const Creators = {
           const storageRef = storage.ref()
           const imgsRef = storageRef.child('images/users/')
 
-          const userImageURL = await imgsRef
-            .child(user.uid)
-            .putString(userImageBase64, 'base64', {
-              contentType: 'image/png'
-            })
-            .then(
-              async () =>
-                await imgsRef
-                  .child(user.uid)
-                  .getDownloadURL()
-                  .then(url => {
-                    return url
-                  })
-            )
+          let userImageURL = ''
+
+          if (hasBase64) {
+            await imgsRef
+              .child(user.uid)
+              .putString(userImageBase64, 'base64', {
+                contentType: 'image/png'
+              })
+              .then(
+                async () =>
+                  await imgsRef
+                    .child(user.uid)
+                    .getDownloadURL()
+                    .then(url => {
+                      userImageURL = url
+                    })
+              )
+          } else {
+            await imgsRef
+              .child(user.uid)
+              .getDownloadURL()
+              .then(url => {
+                userImageURL = url
+              })
+          }
 
           await user
             .updateEmail(userEmail)
