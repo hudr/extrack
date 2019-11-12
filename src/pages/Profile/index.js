@@ -10,6 +10,8 @@ import Loader from '../../components/Loader'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
+import { INITIAL_IMAGE } from '../../utils/Constants'
+
 import { format } from 'date-fns'
 
 import {
@@ -34,7 +36,7 @@ class Profile extends Component {
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
       userBirthDate: props.authUser.userBirthDate || '',
-      userImage: props.authUser.userImage
+      userImage: INITIAL_IMAGE
     }
   }
 
@@ -88,21 +90,20 @@ class Profile extends Component {
   handleBase64 = async e => {
     const file = e.target.files[0]
     const reader = new FileReader()
-
     reader.readAsDataURL(file)
     reader.onload = async () => {
-      const fileInfo = {
-        name: file.name,
-        type: file.type,
-        size: Math.round(file.size / 1000),
-        base64: reader.result.split(',')[1],
-        file: file
-      }
+      const base64 = await reader.result.split('base64,')[1]
+      const imageName = file.name
+      const imageSize = Math.round(file.size / 1000)
 
-      if (fileInfo.size <= 2000) {
-        if (fileInfo.type === 'image/png' || 'image/jpg' || 'image/jpeg') {
+      if (imageSize <= 2000) {
+        if (
+          imageName.indexOf('.jpeg') >= 0 ||
+          imageName.indexOf('.jpg') >= 0 ||
+          imageName.indexOf('.png') >= 0
+        ) {
           this.setState({
-            userImage: fileInfo.base64
+            userImage: base64
           })
         } else {
           alertErrorMessage('Unsupported format.')
@@ -114,7 +115,7 @@ class Profile extends Component {
   }
 
   render() {
-    const { isLoading } = this.props
+    const { isLoading, authUser } = this.props
 
     const {
       isDisabled,
@@ -161,8 +162,14 @@ class Profile extends Component {
           />
           <Img
             onClick={() => this.refs.imageUpload.click()}
-            src={`data:image/png;base64, ${userImage}`}
+            src={
+              userImage
+                ? `data:image/png;base64, ${userImage}`
+                : `${authUser.userImageURL}`
+            }
+            alt='Avatar'
           />
+
           <ProfileInfo
             disabled={isDisabled}
             value={userName}

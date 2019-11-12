@@ -47,11 +47,8 @@ class Header extends Component {
             <Subtitle>How are you today?</Subtitle>
           </TextContainer>
           <ImageContainer>
-            {authUser.userImage && (
-              <Img
-                src={`data:image/png;base64, ${authUser.userImage}`}
-                alt='Avatar'
-              />
+            {authUser.userImageURL && (
+              <Img src={`${authUser.userImageURL}`} alt='Avatar' />
             )}
 
             <Arrow onClick={() => this.setState({ isOpen: !isOpen })} />
