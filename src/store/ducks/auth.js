@@ -1,5 +1,5 @@
 import firebase from '../../config/Firebase'
-import * as AxiosProduct from '../../service/Axios'
+import { INITIAL_IMAGE } from '../../utils/Constants'
 
 export const Types = {
   LOADING: 'auth/LOADING',
@@ -53,9 +53,26 @@ export default function reducer(state = INITIAL_STATE, action) {
 }
 
 export const Creators = {
-  handleSignUp: (email, password, confirmPassword, firstName, userImage) => {
+  handleSignUp: (
+    email,
+    password,
+    confirmPassword,
+    firstName,
+    userImageBase64
+  ) => {
     return async dispatch => {
       const db = firebase.firestore()
+
+      //userImageBase64 Empty?
+      if (userImageBase64 === '') {
+        userImageBase64 = INITIAL_IMAGE
+      }
+
+      //Get UserPicture
+      const storage = firebase.storage()
+      const storageRef = storage.ref()
+      const imgsRef = storageRef.child('images/users/')
+
       if (!email || !password || !confirmPassword || !firstName) {
         dispatch({
           type: Types.ERROR,
@@ -71,25 +88,36 @@ export const Creators = {
           .auth()
           .createUserWithEmailAndPassword(email, password)
           .then(async user => {
-            const userUid = user.user.uid
-            const base64URL = await AxiosProduct.registerProfilePicture({
-              userUid,
-              userImage
-            })
-
-            db.collection('users')
+            await db
+              .collection('users')
               .doc('data')
               .collection('profile')
               .doc(user.user.uid)
               .set({
                 name: firstName
               })
+
+            const userImageURL = await imgsRef
+              .child(user.user.uid)
+              .putString(userImageBase64, 'base64', {
+                contentType: 'image/png'
+              })
+              .then(
+                async () =>
+                  await imgsRef
+                    .child(user.user.uid)
+                    .getDownloadURL()
+                    .then(url => {
+                      return url
+                    })
+              )
+
             dispatch({
               type: Types.USERINFO,
               payload: {
                 userName: firstName,
                 userEmail: email,
-                userImage: base64URL
+                userImageURL
               }
             })
           })
@@ -205,10 +233,12 @@ export const Creators = {
     userGenre,
     userBirthDate,
     userEmail,
-    userImage
+    userImageBase64
   ) => {
     return async dispatch => {
       const db = firebase.firestore()
+
+      const hasBase64 = userImageBase64 ? true : false
 
       if (!userName || !userGenre || !userBirthDate || !userEmail) {
         await dispatch({
@@ -218,11 +248,36 @@ export const Creators = {
       } else {
         const user = firebase.auth().currentUser
         if (user) {
-          const userUid = user.uid
-          const base64URL = await AxiosProduct.updateProfilePicture({
-            userUid,
-            userImage
-          })
+          //Get UserPicture
+          const storage = firebase.storage()
+          const storageRef = storage.ref()
+          const imgsRef = storageRef.child('images/users/')
+
+          let userImageURL = ''
+
+          if (hasBase64) {
+            await imgsRef
+              .child(user.uid)
+              .putString(userImageBase64, 'base64', {
+                contentType: 'image/png'
+              })
+              .then(
+                async () =>
+                  await imgsRef
+                    .child(user.uid)
+                    .getDownloadURL()
+                    .then(url => {
+                      userImageURL = url
+                    })
+              )
+          } else {
+            await imgsRef
+              .child(user.uid)
+              .getDownloadURL()
+              .then(url => {
+                userImageURL = url
+              })
+          }
 
           await user
             .updateEmail(userEmail)
@@ -237,17 +292,16 @@ export const Creators = {
                   gender: userGenre,
                   birthDate: userBirthDate
                 })
-            })
-            .then(async () => {
-              await dispatch({
+
+              dispatch({
                 type: Types.USERINFO,
                 payload: {
                   userName,
                   userGenre,
                   userBirthDate,
                   userEmail,
-                  userUid,
-                  userImage: base64URL
+                  userUid: user.uid,
+                  userImageURL
                 }
               })
             })
@@ -273,11 +327,18 @@ export const Creators = {
     return async dispatch => {
       const user = firebase.auth().currentUser
       if (user) {
-        //Pegando imagem do usuário
-        const allUsersImage = await AxiosProduct.getProfilePicture()
-        const userImage = allUsersImage.filter(
-          base64 => base64.userUid === user.uid
-        )[0].userImage
+        //Get UserPicture
+        const storage = firebase.storage()
+        const storageRef = storage.ref()
+        const imgsRef = storageRef.child('images/users/')
+        const imgName = user.uid
+
+        const userImageURL = await imgsRef
+          .child(imgName)
+          .getDownloadURL()
+          .then(url => {
+            return url
+          })
 
         const db = firebase.firestore()
         const docRef = db
@@ -295,12 +356,12 @@ export const Creators = {
               dispatch({
                 type: Types.USERINFO,
                 payload: {
-                  userName: userName,
+                  userName,
                   userGenre: gender,
                   userBirthDate: birthDate,
                   userEmail: user.email,
                   userUid: user.uid,
-                  userImage: userImage
+                  userImageURL
                 }
               })
             } else {
@@ -349,3 +410,23 @@ export const Creators = {
     }
   }
 }
+
+// //Testing
+// const storage = firebase.storage()
+// const storageRef = storage.ref()
+// const imgsRef = storageRef.child('images/users/')
+// const imgName = 'HsgO1MPdTHRExoyTMowi8OYDSdp1'
+
+// imgsRef
+//   .child(imgName)
+//   .putString(this.state.userImage, 'base64', { contentType: 'image/png' })
+//   .then(snapshot => {
+//     console.log(snapshot)
+
+//     imgsRef
+//       .child(imgName)
+//       .getDownloadURL()
+//       .then(url => {
+//         console.log('download', url)
+//       })
+//   })
