@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import { StyledContainer, Spinner } from './styled'
+import { StyledContainer, Title } from './styled'
 
 export default class Loader extends Component {
   render() {
     return (
       <StyledContainer>
-        <Spinner />
+        <Title>Loading</Title>
       </StyledContainer>
     )
   }
