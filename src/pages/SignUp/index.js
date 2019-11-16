@@ -30,6 +30,17 @@ class SignUp extends Component {
     userImage: ''
   }
 
+  componentDidMount() {
+    //Method to force redirect if logged.
+    setTimeout(() => {
+      const parseLocalStorage = JSON.parse(localStorage.getItem('persist:root'))
+      const isLogged = JSON.parse(parseLocalStorage.auth).isLogged
+      if (isLogged === true) {
+        this.props.history.push('/categories')
+      }
+    }, 50)
+  }
+
   handleSignUp = async e => {
     e.preventDefault()
 
@@ -117,7 +128,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SignUp)
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

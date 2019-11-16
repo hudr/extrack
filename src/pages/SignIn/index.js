@@ -31,6 +31,17 @@ class SignIn extends Component {
     password: ''
   }
 
+  componentDidMount() {
+    //Method to force redirect if logged.
+    setTimeout(() => {
+      const parseLocalStorage = JSON.parse(localStorage.getItem('persist:root'))
+      const isLogged = JSON.parse(parseLocalStorage.auth).isLogged
+      if (isLogged === true) {
+        this.props.history.push('/categories')
+      }
+    }, 50)
+  }
+
   handleSignIn = async e => {
     e.preventDefault()
 
@@ -108,7 +119,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ ...AuthActions, ...ProductActions }, dispatch)
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(SignIn))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SignIn))
