@@ -5,13 +5,13 @@ import 'firebase/database'
 import 'firebase/storage'
 
 const config = {
-  apiKey: 'AIzaSyBaZJ8EHnK7q4DSUwUZuAXHIHI5C-faaS8',
-  authDomain: 'extrack-98ced.firebaseapp.com',
-  databaseURL: 'https://extrack-98ced.firebaseio.com',
-  storageBucket: 'gs://extrack-98ced.appspot.com',
-  projectId: 'extrack-98ced',
-  messagingSenderId: '585088487069',
-  appId: '1:585088487069:web:26246f5e4ef8b32c'
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 }
 
 firebase.initializeApp(config)

@@ -1,14 +1,14 @@
 import axios from 'axios'
 
 const sheetson = axios.create({
-  baseURL: 'https://api.sheetson.com/'
+  baseURL: process.env.REACT_APP_SHEETSON_BASEURL
 })
 
-const API_VERSION = 'v1'
-const SHEET_NAME = 'extrack98-ced'
-const SKIP = '0'
-const LIMIT = '1000'
-const SPREADSHEET_ID = '1NppfKaYvYUhkam6XLqWocGm5ZpXT8e7Yq5DJYxXbzkg'
+const API_VERSION = process.env.REACT_APP_SHEETSON_API_VERSION
+const SHEET_NAME = process.env.REACT_APP_SHEETSON_SHEET_NAME
+const SKIP = process.env.REACT_APP_SHEETSON_SKIP
+const LIMIT = process.env.REACT_APP_SHEETSON_LIMIT
+const SPREADSHEET_ID = process.env.REACT_APP_SHEETSON_SPREADSHEET_ID
 
 export const getProducts = async () => {
   return sheetson
