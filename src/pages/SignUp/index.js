@@ -38,7 +38,7 @@ class SignUp extends Component {
       if (isLogged === true) {
         this.props.history.push('/categories')
       }
-    }, 50)
+    }, 1000)
   }
 
   handleSignUp = async e => {
