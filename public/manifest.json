@@ -43,10 +43,10 @@
       "type": "image/png"
     }
   ],
-  "start_url": "/?utm_source=homescreen",
+  "start_url": "/",
   "background_color": "#FCFCFC",
   "theme_color": "#222",
   "display": "standalone",
-  "lang": "en-US",
+  "lang": "pt-BR",
   "orientation": "portrait"
 }
