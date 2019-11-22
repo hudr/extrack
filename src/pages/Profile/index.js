@@ -17,6 +17,7 @@ import {
   Form,
   Img,
   ProfileInfo,
+  CitySelect,
   ProfileSelect,
   DateLabel,
   BrithInfo,
@@ -31,6 +32,7 @@ class Profile extends Component {
     this.state = {
       isDisabled: true,
       userName: props.authUser.userName,
+      userCity: props.authUser.userCity,
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
       userBirthDate: props.authUser.userBirthDate || '',
@@ -43,6 +45,7 @@ class Profile extends Component {
 
     const {
       userName,
+      userCity,
       userGenre,
       userBirthDate,
       userEmail,
@@ -51,11 +54,11 @@ class Profile extends Component {
 
     const { handleUpdateProfile, handleLoader } = this.props
 
-    //Começando carregar
     await handleLoader(true)
 
     await handleUpdateProfile(
       userName,
+      userCity,
       userGenre,
       userBirthDate,
       userEmail,
@@ -71,7 +74,6 @@ class Profile extends Component {
       alertErrorMessage(errorMessage)
     }
 
-    //Terminando carregar
     await handleLoader(false)
   }
 
@@ -79,6 +81,10 @@ class Profile extends Component {
     e.preventDefault()
     const { isDisabled } = this.state
     this.setState({ isDisabled: !isDisabled })
+  }
+
+  handleCityChange(e) {
+    this.setState({ userCity: e.target.value })
   }
 
   handleGenreChange(e) {
@@ -118,6 +124,7 @@ class Profile extends Component {
     const {
       isDisabled,
       userName,
+      userCity,
       userGenre,
       userBirthDate,
       userEmail,
@@ -129,7 +136,7 @@ class Profile extends Component {
     let maxDate = format(new Date(), 'yyyy-MM-dd')
 
     if (isDisabled) {
-      if (userName && userGenre && userBirthDate && userEmail) {
+      if (userName && userCity && userGenre && userBirthDate && userEmail) {
         editButton = (
           <EditProfileButton onClick={this.handleForm}>Edit</EditProfileButton>
         )
@@ -174,6 +181,22 @@ class Profile extends Component {
             placeholder='Fill your display name*'
             onChange={e => this.setState({ userName: e.target.value })}
           />
+
+          {(userCity || !isDisabled) && (
+            <CitySelect
+              disabled={isDisabled}
+              defaultValue={!userCity ? 'default' : userCity}
+              onChange={e => this.handleCityChange(e)}
+            >
+              <option value='default' disabled>
+                Select your city*
+              </option>
+              <option value='Rio de Janeiro'>Rio de Janeiro</option>
+              <option value='São Paulo'>São Paulo</option>
+              <option value='Brasília'>Brasília</option>
+            </CitySelect>
+          )}
+
           {(userGenre || !isDisabled) && (
             <ProfileSelect
               disabled={isDisabled}
@@ -193,6 +216,7 @@ class Profile extends Component {
               <option value='Androgynous'>Androgynous</option>
             </ProfileSelect>
           )}
+
           {!isDisabled && <DateLabel>Fill your birth date*</DateLabel>}
           {(userBirthDate || !isDisabled) && (
             <BrithInfo
@@ -228,7 +252,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => bindActionCreators(AuthActions, dispatch)
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(Profile))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Profile))

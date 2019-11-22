@@ -57,7 +57,7 @@ class Comparative extends Component {
 
   async componentDidMount() {
     const {
-      authUser: { userUid, userGenre, userBirthDate }
+      authUser: { userUid, userCity, userGenre, userBirthDate }
     } = this.props
 
     const { products } = this.props
@@ -66,11 +66,12 @@ class Comparative extends Component {
       product => product.userUid === userUid
     )
 
-    if (userHasProducts.length > 0 && userGenre && userBirthDate) {
+    if (userHasProducts.length > 0 && userCity && userGenre && userBirthDate) {
       const filterProductsForUser = await filterUserProducts(products, userUid)
       const filterAllProducts = await filterAllUserProducts(
         products,
         userUid,
+        userCity,
         userGenre,
         userBirthDate
       )
@@ -467,7 +468,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(ProductActions, dispatch)
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Comparative)
+export default connect(mapStateToProps, mapDispatchToProps)(Comparative)

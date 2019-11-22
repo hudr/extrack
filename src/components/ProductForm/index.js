@@ -21,6 +21,7 @@ import {
 class ProductForm extends Component {
   state = {
     userUid: this.props.authUser.userUid,
+    userCity: this.props.authUser.userCity,
     userBirthDate: this.props.authUser.userBirthDate || '',
     userGenre: this.props.authUser.userGenre || '',
     pName: '',
@@ -36,6 +37,7 @@ class ProductForm extends Component {
 
     const {
       userUid,
+      userCity,
       userBirthDate,
       userGenre,
       pName,
@@ -49,6 +51,7 @@ class ProductForm extends Component {
     if (pName && pCategory !== 'default' && pQuantity && pPrice) {
       await submitUserProduct({
         userUid,
+        userCity,
         userBirthDate,
         userGenre,
         pName,
@@ -154,7 +157,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(ProductActions, dispatch)
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProductForm)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductForm)
