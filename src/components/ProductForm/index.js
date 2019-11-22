@@ -135,7 +135,7 @@ class ProductForm extends Component {
                 placeholder='Price*'
                 value={pPrice}
                 type='number'
-                min='1'
+                min='0.01'
                 step='.01'
                 onChange={e => this.setState({ pPrice: e.target.value })}
               />
