@@ -48,7 +48,6 @@ class SignIn extends Component {
     const { email, password } = this.state
     const { handleLogin, handleLoader } = this.props
 
-    //Começando carregar
     await handleLoader(true)
 
     await handleLogin(email, password)
@@ -66,7 +65,6 @@ class SignIn extends Component {
       this.props.history.push('/categories')
     }
 
-    //Terminando carregar
     await handleLoader(false)
   }
 

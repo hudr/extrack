@@ -17,6 +17,7 @@ import {
   Form,
   Img,
   Input,
+  CitySelect,
   CreateAccountButton,
   GoToLoginLink
 } from './styled'
@@ -24,6 +25,7 @@ import {
 class SignUp extends Component {
   state = {
     firstName: '',
+    city: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -46,6 +48,7 @@ class SignUp extends Component {
 
     const {
       firstName,
+      city,
       email,
       password,
       confirmPassword,
@@ -54,10 +57,16 @@ class SignUp extends Component {
 
     const { handleSignUp, handleLoader } = this.props
 
-    //Começando carregar
     await handleLoader(true)
 
-    await handleSignUp(email, password, confirmPassword, firstName, userImage)
+    await handleSignUp(
+      email,
+      city,
+      password,
+      confirmPassword,
+      firstName,
+      userImage
+    )
 
     const { errorMessage } = this.props
 
@@ -71,13 +80,16 @@ class SignUp extends Component {
       this.props.history.push('/categories')
     }
 
-    //Começando carregar
     await handleLoader(false)
+  }
+
+  handleCityChange(e) {
+    this.setState({ city: e.target.value })
   }
 
   render() {
     const { isLoading } = this.props
-    const { firstName, email, password, confirmPassword } = this.state
+    const { firstName, city, email, password, confirmPassword } = this.state
 
     return isLoading ? (
       <Loader />
@@ -91,6 +103,19 @@ class SignUp extends Component {
             value={firstName}
             onChange={e => this.setState({ firstName: e.target.value })}
           />
+
+          <CitySelect
+            defaultValue={!city ? 'default' : city}
+            onChange={e => this.handleCityChange(e)}
+          >
+            <option value='default' disabled>
+              Select your city*
+            </option>
+            <option value='Rio de Janeiro'>Rio de Janeiro</option>
+            <option value='São Paulo'>São Paulo</option>
+            <option value='Brasília'>Brasília</option>
+          </CitySelect>
+
           <Input
             placeholder='Type your email'
             value={email}

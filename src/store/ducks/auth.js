@@ -55,6 +55,7 @@ export default function reducer(state = INITIAL_STATE, action) {
 export const Creators = {
   handleSignUp: (
     email,
+    city,
     password,
     confirmPassword,
     firstName,
@@ -73,7 +74,7 @@ export const Creators = {
       const storageRef = storage.ref()
       const imgsRef = storageRef.child('images/users/')
 
-      if (!email || !password || !confirmPassword || !firstName) {
+      if (!email || !password || !confirmPassword || !firstName || !city) {
         dispatch({
           type: Types.ERROR,
           payload: 'Please, fill in all required fields.'
@@ -94,7 +95,8 @@ export const Creators = {
               .collection('profile')
               .doc(user.user.uid)
               .set({
-                name: firstName
+                name: firstName,
+                city
               })
 
             const userImageURL = await imgsRef
@@ -116,6 +118,7 @@ export const Creators = {
               type: Types.USERINFO,
               payload: {
                 userName: firstName,
+                userCity: city,
                 userEmail: email,
                 userImageURL
               }
@@ -230,6 +233,7 @@ export const Creators = {
 
   handleUpdateProfile: (
     userName,
+    userCity,
     userGenre,
     userBirthDate,
     userEmail,
@@ -240,7 +244,13 @@ export const Creators = {
 
       const hasBase64 = userImageBase64 ? true : false
 
-      if (!userName || !userGenre || !userBirthDate || !userEmail) {
+      if (
+        !userName ||
+        !userGenre ||
+        !userBirthDate ||
+        !userEmail ||
+        !userCity
+      ) {
         await dispatch({
           type: Types.ERROR,
           payload: 'Please, fill in all required fields.'
@@ -289,6 +299,7 @@ export const Creators = {
                 .doc(user.uid)
                 .set({
                   name: userName,
+                  city: userCity,
                   gender: userGenre,
                   birthDate: userBirthDate
                 })
@@ -297,6 +308,7 @@ export const Creators = {
                 type: Types.USERINFO,
                 payload: {
                   userName,
+                  userCity,
                   userGenre,
                   userBirthDate,
                   userEmail,
@@ -351,12 +363,14 @@ export const Creators = {
           .then(async doc => {
             if (doc.exists) {
               const userName = await doc.data().name
+              const userCity = await doc.data().city
               const gender = await doc.data().gender
               const birthDate = await doc.data().birthDate
               dispatch({
                 type: Types.USERINFO,
                 payload: {
                   userName,
+                  userCity,
                   userGenre: gender,
                   userBirthDate: birthDate,
                   userEmail: user.email,
@@ -410,23 +424,3 @@ export const Creators = {
     }
   }
 }
-
-// //Testing
-// const storage = firebase.storage()
-// const storageRef = storage.ref()
-// const imgsRef = storageRef.child('images/users/')
-// const imgName = 'HsgO1MPdTHRExoyTMowi8OYDSdp1'
-
-// imgsRef
-//   .child(imgName)
-//   .putString(this.state.userImage, 'base64', { contentType: 'image/png' })
-//   .then(snapshot => {
-//     console.log(snapshot)
-
-//     imgsRef
-//       .child(imgName)
-//       .getDownloadURL()
-//       .then(url => {
-//         console.log('download', url)
-//       })
-//   })
