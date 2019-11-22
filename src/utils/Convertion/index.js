@@ -71,6 +71,7 @@ export const filterUserProducts = async (products, userUid) => {
 export const filterAllUserProducts = async (
   products,
   userUid,
+  userCity,
   userGenre,
   userBirthDate
 ) => {
@@ -88,6 +89,7 @@ export const filterAllUserProducts = async (
   const allProducts = products.filter(
     product =>
       product.userUid !== userUid &&
+      product.userCity !== userCity &&
       product.userGenre === userGenre &&
       getAge(product.userBirthDate) === getAge(userBirthDate)
   )
