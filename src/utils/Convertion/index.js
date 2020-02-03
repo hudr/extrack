@@ -63,7 +63,7 @@ export const filterUserProducts = async (products, userUid) => {
       })
   }
 
-  // console.log('user inside function', userProductsData)
+  //console.log('user inside function', userProductsData)
 
   return userProductsData
 }
@@ -89,7 +89,7 @@ export const filterAllUserProducts = async (
   const allProducts = products.filter(
     product =>
       product.userUid !== userUid &&
-      product.userCity !== userCity &&
+      product.userCity === userCity &&
       product.userGenre === userGenre &&
       getAge(product.userBirthDate) === getAge(userBirthDate)
   )
@@ -147,7 +147,7 @@ export const filterAllUserProducts = async (
       })
   }
 
-  // console.log('all inside function', allProductsData)
+  //console.log('all inside function', allProductsData)
 
   return allProductsData
 }

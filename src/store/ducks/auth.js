@@ -233,6 +233,7 @@ export const Creators = {
 
   handleUpdateProfile: (
     userName,
+    monthAmount,
     userCity,
     userGenre,
     userBirthDate,
@@ -246,6 +247,7 @@ export const Creators = {
 
       if (
         !userName ||
+        !monthAmount ||
         !userGenre ||
         !userBirthDate ||
         !userEmail ||
@@ -299,6 +301,7 @@ export const Creators = {
                 .doc(user.uid)
                 .set({
                   name: userName,
+                  amount: monthAmount,
                   city: userCity,
                   gender: userGenre,
                   birthDate: userBirthDate
@@ -308,6 +311,7 @@ export const Creators = {
                 type: Types.USERINFO,
                 payload: {
                   userName,
+                  monthAmount,
                   userCity,
                   userGenre,
                   userBirthDate,
@@ -363,6 +367,7 @@ export const Creators = {
           .then(async doc => {
             if (doc.exists) {
               const userName = await doc.data().name
+              const monthAmount = await doc.data().amount
               const userCity = await doc.data().city
               const gender = await doc.data().gender
               const birthDate = await doc.data().birthDate
@@ -370,6 +375,7 @@ export const Creators = {
                 type: Types.USERINFO,
                 payload: {
                   userName,
+                  monthAmount,
                   userCity,
                   userGenre: gender,
                   userBirthDate: birthDate,

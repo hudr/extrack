@@ -32,6 +32,7 @@ class Profile extends Component {
     this.state = {
       isDisabled: true,
       userName: props.authUser.userName,
+      monthAmount: props.authUser.monthAmount || '',
       userCity: props.authUser.userCity,
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
@@ -45,6 +46,7 @@ class Profile extends Component {
 
     const {
       userName,
+      monthAmount,
       userCity,
       userGenre,
       userBirthDate,
@@ -58,6 +60,7 @@ class Profile extends Component {
 
     await handleUpdateProfile(
       userName,
+      monthAmount,
       userCity,
       userGenre,
       userBirthDate,
@@ -124,6 +127,7 @@ class Profile extends Component {
     const {
       isDisabled,
       userName,
+      monthAmount,
       userCity,
       userGenre,
       userBirthDate,
@@ -136,7 +140,14 @@ class Profile extends Component {
     let maxDate = format(new Date(), 'yyyy-MM-dd')
 
     if (isDisabled) {
-      if (userName && userCity && userGenre && userBirthDate && userEmail) {
+      if (
+        userName &&
+        userCity &&
+        userGenre &&
+        userBirthDate &&
+        userEmail &&
+        monthAmount
+      ) {
         editButton = (
           <EditProfileButton onClick={this.handleForm}>Edit</EditProfileButton>
         )
@@ -181,6 +192,18 @@ class Profile extends Component {
             placeholder='Fill your display name*'
             onChange={e => this.setState({ userName: e.target.value })}
           />
+
+          {(monthAmount || !isDisabled) && (
+            <ProfileInfo
+              disabled={isDisabled}
+              value={monthAmount}
+              type='number'
+              min='1'
+              step='.01'
+              placeholder='Fill your month amount*'
+              onChange={e => this.setState({ monthAmount: e.target.value })}
+            />
+          )}
 
           {(userCity || !isDisabled) && (
             <CitySelect

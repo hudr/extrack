@@ -82,12 +82,12 @@ class ProductForm extends Component {
   render() {
     const { pName, pCategory, pQuantity, pPrice } = this.state
     const {
-      authUser: { userGenre, userBirthDate }
+      authUser: { userGenre, userBirthDate, monthAmount }
     } = this.props
 
     return (
       <StyledContainer>
-        {!userGenre && !userBirthDate ? (
+        {!userGenre && !userBirthDate && !monthAmount ? (
           <Fragment>
             <Title>
               You can't insert products yet. Please complete your profile.
