@@ -22,8 +22,9 @@ class ProductForm extends Component {
   state = {
     userUid: this.props.authUser.userUid,
     userCity: this.props.authUser.userCity,
-    userBirthDate: this.props.authUser.userBirthDate || '',
+    monthAmount: this.props.authUser.monthAmount || '',
     userGenre: this.props.authUser.userGenre || '',
+    userEarnClass: this.props.authUser.userEarnClass || '',
     pName: '',
     pCategory: 'default',
     pQuantity: '',
@@ -38,7 +39,8 @@ class ProductForm extends Component {
     const {
       userUid,
       userCity,
-      userBirthDate,
+      monthAmount,
+      userEarnClass,
       userGenre,
       pName,
       pCategory,
@@ -52,8 +54,9 @@ class ProductForm extends Component {
       await submitUserProduct({
         userUid,
         userCity,
-        userBirthDate,
+        monthAmount,
         userGenre,
+        userEarnClass,
         pName,
         pCategory,
         pQuantity,
@@ -82,12 +85,12 @@ class ProductForm extends Component {
   render() {
     const { pName, pCategory, pQuantity, pPrice } = this.state
     const {
-      authUser: { userGenre, userBirthDate, monthAmount }
+      authUser: { userGenre, monthAmount, userEarnClass }
     } = this.props
 
     return (
       <StyledContainer>
-        {!userGenre && !userBirthDate && !monthAmount ? (
+        {!userGenre && !userEarnClass && !monthAmount ? (
           <Fragment>
             <Title>
               You can't insert products yet. Please complete your profile.

@@ -10,8 +10,6 @@ import Loader from '../../components/Loader'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
-import { format } from 'date-fns'
-
 import {
   StyledContainer,
   Form,
@@ -19,8 +17,6 @@ import {
   ProfileInfo,
   CitySelect,
   ProfileSelect,
-  DateLabel,
-  BrithInfo,
   EditProfileButton,
   SaveProfileButton,
   BackToHome
@@ -36,7 +32,6 @@ class Profile extends Component {
       userCity: props.authUser.userCity,
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
-      userBirthDate: props.authUser.userBirthDate || '',
       userImage: ''
     }
   }
@@ -49,7 +44,6 @@ class Profile extends Component {
       monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     } = this.state
@@ -63,7 +57,6 @@ class Profile extends Component {
       monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     )
@@ -130,24 +123,14 @@ class Profile extends Component {
       monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     } = this.state
 
     let editButton
 
-    let maxDate = format(new Date(), 'yyyy-MM-dd')
-
     if (isDisabled) {
-      if (
-        userName &&
-        userCity &&
-        userGenre &&
-        userBirthDate &&
-        userEmail &&
-        monthAmount
-      ) {
+      if (userName && userCity && userGenre && userEmail && monthAmount) {
         editButton = (
           <EditProfileButton onClick={this.handleForm}>Edit</EditProfileButton>
         )
@@ -193,12 +176,21 @@ class Profile extends Component {
             onChange={e => this.setState({ userName: e.target.value })}
           />
 
+          {(authUser.userEarnClass || !isDisabled) && (
+            <ProfileInfo
+              disabled
+              value={`Class ${authUser.userEarnClass}`}
+              type='text'
+            />
+          )}
+
           {(monthAmount || !isDisabled) && (
             <ProfileInfo
               disabled={isDisabled}
               value={monthAmount}
               type='number'
               min='1'
+              max='999999'
               step='.01'
               placeholder='Fill your month amount*'
               onChange={e => this.setState({ monthAmount: e.target.value })}
@@ -240,16 +232,6 @@ class Profile extends Component {
             </ProfileSelect>
           )}
 
-          {!isDisabled && <DateLabel>Fill your birth date*</DateLabel>}
-          {(userBirthDate || !isDisabled) && (
-            <BrithInfo
-              type='date'
-              max={maxDate}
-              disabled={isDisabled}
-              value={userBirthDate}
-              onChange={e => this.setState({ userBirthDate: e.target.value })}
-            />
-          )}
           <ProfileInfo
             disabled={isDisabled}
             value={userEmail}

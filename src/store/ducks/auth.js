@@ -1,6 +1,8 @@
 import firebase from '../../config/Firebase'
 import { INITIAL_IMAGE } from '../../utils/Constants'
 
+import { getEarningClass } from '../../service/Axios'
+
 export const Types = {
   LOADING: 'auth/LOADING',
   LOGIN: 'auth/LOGIN',
@@ -236,7 +238,6 @@ export const Creators = {
     monthAmount,
     userCity,
     userGenre,
-    userBirthDate,
     userEmail,
     userImageBase64
   ) => {
@@ -245,14 +246,7 @@ export const Creators = {
 
       const hasBase64 = userImageBase64 ? true : false
 
-      if (
-        !userName ||
-        !monthAmount ||
-        !userGenre ||
-        !userBirthDate ||
-        !userEmail ||
-        !userCity
-      ) {
+      if (!userName || !monthAmount || !userGenre || !userEmail || !userCity) {
         await dispatch({
           type: Types.ERROR,
           payload: 'Please, fill in all required fields.'
@@ -291,6 +285,8 @@ export const Creators = {
               })
           }
 
+          const userEarnClass = await getEarningClass(monthAmount)
+
           await user
             .updateEmail(userEmail)
             .then(async () => {
@@ -304,7 +300,7 @@ export const Creators = {
                   amount: monthAmount,
                   city: userCity,
                   gender: userGenre,
-                  birthDate: userBirthDate
+                  earningClass: userEarnClass
                 })
 
               dispatch({
@@ -314,7 +310,7 @@ export const Creators = {
                   monthAmount,
                   userCity,
                   userGenre,
-                  userBirthDate,
+                  userEarnClass,
                   userEmail,
                   userUid: user.uid,
                   userImageURL
@@ -370,15 +366,17 @@ export const Creators = {
               const monthAmount = await doc.data().amount
               const userCity = await doc.data().city
               const gender = await doc.data().gender
-              const birthDate = await doc.data().birthDate
+
+              const userEarnClass = await getEarningClass(monthAmount)
+
               dispatch({
                 type: Types.USERINFO,
                 payload: {
                   userName,
                   monthAmount,
+                  userEarnClass,
                   userCity,
                   userGenre: gender,
-                  userBirthDate: birthDate,
                   userEmail: user.email,
                   userUid: user.uid,
                   userImageURL

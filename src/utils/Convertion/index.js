@@ -73,7 +73,7 @@ export const filterAllUserProducts = async (
   userUid,
   userCity,
   userGenre,
-  userBirthDate
+  userEarningClass
 ) => {
   const allCategories = [
     'Food',
@@ -84,14 +84,12 @@ export const filterAllUserProducts = async (
     'Personal'
   ]
 
-  const getAge = date => new Date().getFullYear() - new Date(date).getFullYear()
-
   const allProducts = products.filter(
     product =>
       product.userUid !== userUid &&
       product.userCity === userCity &&
       product.userGenre === userGenre &&
-      getAge(product.userBirthDate) === getAge(userBirthDate)
+      product.userEarningClass === userEarningClass
   )
 
   const allTotalValueFromAllCategories = allProducts.map(
