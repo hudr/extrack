@@ -43,8 +43,6 @@ export const getEarningClass = async monthAmount => {
     .then(res => {
       const userEarnClass = res.data.results
 
-      console.log(parseFloat(monthAmount))
-
       const userEarnClassFiltered = userEarnClass.filter(range => {
         return (
           parseFloat(monthAmount) >= parseFloat(range.Min) &&
