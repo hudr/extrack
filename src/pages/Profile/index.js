@@ -179,7 +179,11 @@ class Profile extends Component {
           {(authUser.userEarnClass || !isDisabled) && (
             <ProfileInfo
               disabled
-              value={`Class ${authUser.userEarnClass}`}
+              value={
+                authUser.userEarnClass === undefined
+                  ? `You don't have an earn class yet`
+                  : `Earn Class: ${authUser.userEarnClass}`
+              }
               type='text'
             />
           )}

@@ -57,7 +57,7 @@ class Comparative extends Component {
 
   async componentDidMount() {
     const {
-      authUser: { userUid, userCity, userGenre, userEarningClass }
+      authUser: { userUid, userCity, userGenre, userEarnClass }
     } = this.props
 
     const { products } = this.props
@@ -66,19 +66,14 @@ class Comparative extends Component {
       product => product.userUid === userUid
     )
 
-    if (
-      userHasProducts.length > 0 &&
-      userCity &&
-      userGenre &&
-      userEarningClass
-    ) {
+    if (userHasProducts.length > 0 && userCity && userGenre && userEarnClass) {
       const filterProductsForUser = await filterUserProducts(products, userUid)
       const filterAllProducts = await filterAllUserProducts(
         products,
         userUid,
         userCity,
         userGenre,
-        userEarningClass
+        userEarnClass
       )
 
       this.setState({
@@ -112,12 +107,12 @@ class Comparative extends Component {
       hasProducts
     } = this.state
     const {
-      authUser: { userGenre, userEarningClass }
+      authUser: { userGenre, userEarnClass }
     } = this.props
 
     return (
       <StyledContainer>
-        {!userGenre && !userEarningClass ? (
+        {!userGenre && !userEarnClass ? (
           <Fragment>
             <Title>
               You can't see comparative yet. Please complete your profile.
