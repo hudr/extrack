@@ -53,11 +53,11 @@ export class CategoryCards extends Component {
                     <CardImg src={category.imgURL} alt={category.altText} />
                     <CardTitle>{category.title}</CardTitle>
                     <CardDescription>
-                      {userProducts &&
-                        userProducts.products &&
-                        userProducts.products.totalProductsFromCategory[
-                          index
-                        ]}{' '}
+                      {userProducts && userProducts.products === undefined
+                        ? '0'
+                        : userProducts.products.totalProductsFromCategory[
+                            index
+                          ]}{' '}
                       item(s)
                     </CardDescription>
                   </CardContent>
