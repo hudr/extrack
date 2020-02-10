@@ -40,5 +40,12 @@ export const Creators = {
       await AxiosProduct.insertProduct(productData)
       await dispatch(Creators.getProducts())
     }
+  },
+
+  removeUserProduct: rowIndex => {
+    return async dispatch => {
+      await AxiosProduct.removeProduct(rowIndex)
+      await dispatch(Creators.getProducts())
+    }
   }
 }
