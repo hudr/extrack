@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute'
 import Header from './components/Header'
 import Menu from './components/Menu'
 import Categories from './components/CategoryCards'
+import ProductList from './components/ProductList'
 import ProductForm from './components/ProductForm'
 import Comparative from './components/Comparative'
 
@@ -16,6 +17,8 @@ import SignUp from './pages/SignUp'
 import ForgotPassword from './pages/ForgotPassword'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
+
+import { Categories as CategoriesMock } from './utils/Mocks/Categories'
 
 const Routes = () => (
   <BrowserRouter>
@@ -45,6 +48,33 @@ const Routes = () => (
           </Fragment>
         )}
       />
+
+      <PrivateRoute
+        exact
+        path='/categories'
+        component={() => (
+          <Fragment>
+            <Header />
+            <Menu />
+            <Categories />
+          </Fragment>
+        )}
+      />
+
+      {CategoriesMock.map(category => (
+        <PrivateRoute
+          exact
+          key={category.title}
+          path={`/categories/${category.title.toLowerCase()}`}
+          component={() => (
+            <Fragment>
+              <Header />
+              <Menu />
+              <ProductList category={category.title} />
+            </Fragment>
+          )}
+        />
+      ))}
 
       <PrivateRoute
         exact

@@ -35,6 +35,16 @@ export const insertProduct = async productData => {
     })
 }
 
+export const removeProduct = async rowIndex => {
+  return sheetson
+    .delete(
+      `/${API_VERSION}/sheets/${SHEET_NAME}/${rowIndex}?spreadsheetId=${SPREADSHEET_ID}`
+    )
+    .catch(err => {
+      console.error(err)
+    })
+}
+
 export const getEarningClass = async monthAmount => {
   return sheetson
     .get(
