@@ -14,11 +14,14 @@ export const StyledContainer = styled.div`
 `
 
 export const CardContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-content: center;
-  align-items: center;
-  margin: 0 auto;
+  a {
+    text-decoration: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
 
   @media screen and (min-width: 320px) and (max-width: 767px) {
     width: 90%;
@@ -31,7 +34,7 @@ export const CardDiv = styled.div`
   align-items: center;
   flex-direction: column;
 
-  width: 120px;
+  width: 850px;
   height: 150px;
   background: white;
   border-radius: 8px;

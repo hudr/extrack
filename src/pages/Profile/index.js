@@ -10,8 +10,6 @@ import Loader from '../../components/Loader'
 
 import { Creators as AuthActions } from '../../store/ducks/auth'
 
-import { format } from 'date-fns'
-
 import {
   StyledContainer,
   Form,
@@ -19,8 +17,6 @@ import {
   ProfileInfo,
   CitySelect,
   ProfileSelect,
-  DateLabel,
-  BrithInfo,
   EditProfileButton,
   SaveProfileButton,
   BackToHome
@@ -32,10 +28,10 @@ class Profile extends Component {
     this.state = {
       isDisabled: true,
       userName: props.authUser.userName,
+      monthAmount: props.authUser.monthAmount || '',
       userCity: props.authUser.userCity,
       userEmail: props.authUser.userEmail,
       userGenre: props.authUser.userGenre || '',
-      userBirthDate: props.authUser.userBirthDate || '',
       userImage: ''
     }
   }
@@ -45,9 +41,9 @@ class Profile extends Component {
 
     const {
       userName,
+      monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     } = this.state
@@ -58,9 +54,9 @@ class Profile extends Component {
 
     await handleUpdateProfile(
       userName,
+      monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     )
@@ -92,6 +88,10 @@ class Profile extends Component {
   }
 
   handleBase64 = async e => {
+    if (e.target.files.length === 0) {
+      return
+    }
+
     const file = e.target.files[0]
     const reader = new FileReader()
     reader.readAsDataURL(file)
@@ -124,19 +124,17 @@ class Profile extends Component {
     const {
       isDisabled,
       userName,
+      monthAmount,
       userCity,
       userGenre,
-      userBirthDate,
       userEmail,
       userImage
     } = this.state
 
     let editButton
 
-    let maxDate = format(new Date(), 'yyyy-MM-dd')
-
     if (isDisabled) {
-      if (userName && userCity && userGenre && userBirthDate && userEmail) {
+      if (userName && userCity && userGenre && userEmail && monthAmount) {
         editButton = (
           <EditProfileButton onClick={this.handleForm}>Edit</EditProfileButton>
         )
@@ -182,6 +180,31 @@ class Profile extends Component {
             onChange={e => this.setState({ userName: e.target.value })}
           />
 
+          {(authUser.userEarnClass || !isDisabled) && (
+            <ProfileInfo
+              disabled
+              value={
+                authUser.userEarnClass === undefined
+                  ? `You don't have an earn class yet`
+                  : `Earn Class: ${authUser.userEarnClass}`
+              }
+              type='text'
+            />
+          )}
+
+          {(monthAmount || !isDisabled) && (
+            <ProfileInfo
+              disabled={isDisabled}
+              value={monthAmount}
+              type='number'
+              min='1'
+              max='999999'
+              step='.01'
+              placeholder='Fill your month amount*'
+              onChange={e => this.setState({ monthAmount: e.target.value })}
+            />
+          )}
+
           {(userCity || !isDisabled) && (
             <CitySelect
               disabled={isDisabled}
@@ -217,16 +240,6 @@ class Profile extends Component {
             </ProfileSelect>
           )}
 
-          {!isDisabled && <DateLabel>Fill your birth date*</DateLabel>}
-          {(userBirthDate || !isDisabled) && (
-            <BrithInfo
-              type='date'
-              max={maxDate}
-              disabled={isDisabled}
-              value={userBirthDate}
-              onChange={e => this.setState({ userBirthDate: e.target.value })}
-            />
-          )}
           <ProfileInfo
             disabled={isDisabled}
             value={userEmail}
