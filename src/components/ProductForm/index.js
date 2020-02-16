@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
+import { Creators as AuthActions } from '../../store/ducks/auth'
 import { Creators as ProductActions } from '../../store/ducks/product'
+
+import LoaderBullets from '../../components/LoaderBullets'
 
 import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
@@ -28,9 +31,7 @@ class ProductForm extends Component {
     pName: '',
     pCategory: 'default',
     pQuantity: '',
-    pPrice: '',
-    createdAt: '',
-    updatedAt: ''
+    pPrice: ''
   }
 
   submitProduct = async e => {
@@ -48,9 +49,10 @@ class ProductForm extends Component {
       pPrice
     } = this.state
 
-    const { submitUserProduct } = this.props
+    const { submitUserProduct, handleLoader } = this.props
 
     if (pName && pCategory !== 'default' && pQuantity && pPrice) {
+      await handleLoader(true)
       await submitUserProduct({
         userUid,
         userCity,
@@ -61,9 +63,11 @@ class ProductForm extends Component {
         pCategory,
         pQuantity,
         pPrice,
+        isActive: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       })
+      await handleLoader(false)
 
       alertSuccessMessage('Product has been created')
 
@@ -85,79 +89,88 @@ class ProductForm extends Component {
   render() {
     const { pName, pCategory, pQuantity, pPrice } = this.state
     const {
+      isLoading,
       authUser: { userGenre, monthAmount, userEarnClass }
     } = this.props
 
     return (
-      <StyledContainer>
-        {!userGenre && !userEarnClass && !monthAmount ? (
-          <Fragment>
-            <Title>
-              You can't insert products yet. Please complete your profile.
-            </Title>
-            <GoToProfile>
-              <Link to='/profile'>Go to profile</Link>
-            </GoToProfile>
-          </Fragment>
+      <>
+        {isLoading ? (
+          <LoaderBullets />
         ) : (
-          <Fragment>
-            <Title>Fill all informations to register your products:</Title>
-            <Form onSubmit={this.submitProduct}>
-              <ProfileInfo
-                placeholder='Name*'
-                type='text'
-                value={pName}
-                onChange={e => this.setState({ pName: e.target.value })}
-              />
+          <StyledContainer>
+            {!userGenre && !userEarnClass && !monthAmount ? (
+              <Fragment>
+                <Title>
+                  You can't insert products yet. Please complete your profile.
+                </Title>
+                <GoToProfile>
+                  <Link to='/profile'>Go to profile</Link>
+                </GoToProfile>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Title>Fill all informations to register your products:</Title>
+                <Form onSubmit={this.submitProduct}>
+                  <ProfileInfo
+                    placeholder='Name*'
+                    type='text'
+                    value={pName}
+                    onChange={e => this.setState({ pName: e.target.value })}
+                  />
 
-              <ProductSelect
-                value={pCategory}
-                onChange={e => this.handleGenreChange(e)}
-              >
-                <option value='default' disabled>
-                  Select the category*
-                </option>
-                <option value='Food'>Food</option>
-                <option value='House'>House</option>
-                <option value='Vehicle'>Vehicle</option>
-                <option value='Health'>Health</option>
-                <option value='Beauty'>Beauty</option>
-                <option value='Personal'>Personal</option>
-              </ProductSelect>
+                  <ProductSelect
+                    value={pCategory}
+                    onChange={e => this.handleGenreChange(e)}
+                  >
+                    <option value='default' disabled>
+                      Select the category*
+                    </option>
+                    <option value='Food'>Food</option>
+                    <option value='House'>House</option>
+                    <option value='Vehicle'>Vehicle</option>
+                    <option value='Health'>Health</option>
+                    <option value='Beauty'>Beauty</option>
+                    <option value='Personal'>Personal</option>
+                  </ProductSelect>
 
-              <ProfileInfo
-                placeholder='Quantity*'
-                value={pQuantity}
-                type='number'
-                min='1'
-                step='1'
-                onChange={e => this.setState({ pQuantity: e.target.value })}
-              />
+                  <ProfileInfo
+                    placeholder='Quantity*'
+                    value={pQuantity}
+                    type='number'
+                    min='1'
+                    step='1'
+                    onChange={e => this.setState({ pQuantity: e.target.value })}
+                  />
 
-              <ProfileInfo
-                placeholder='Price*'
-                value={pPrice}
-                type='number'
-                min='0.01'
-                step='.01'
-                onChange={e => this.setState({ pPrice: e.target.value })}
-              />
+                  <ProfileInfo
+                    placeholder='Price*'
+                    value={pPrice}
+                    type='number'
+                    min='0.01'
+                    step='.01'
+                    onChange={e => this.setState({ pPrice: e.target.value })}
+                  />
 
-              <RegisterProduct type='submit'>+</RegisterProduct>
-            </Form>
-          </Fragment>
+                  <RegisterProduct type='submit'>+</RegisterProduct>
+                </Form>
+              </Fragment>
+            )}
+          </StyledContainer>
         )}
-      </StyledContainer>
+      </>
     )
   }
 }
 
 const mapStateToProps = state => ({
+  isLoading: state.auth.isLoading,
   authUser: state.auth.authUser,
+  products: state.product.products,
   userProducts: state.product.userProducts
 })
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(ProductActions, dispatch)
+  bindActionCreators({ ...AuthActions, ...ProductActions }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductForm)

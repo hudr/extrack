@@ -42,6 +42,7 @@ export class CategoryCards extends Component {
 
   render() {
     const { userProducts } = this.state
+
     return (
       <StyledContainer>
         <CardContainer>
