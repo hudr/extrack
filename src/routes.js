@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 
 import PrivateRoute from './utils/PrivateRoute'
 
+import { connect } from 'react-redux'
+
 //Components
 import Header from './components/Header'
 import Menu from './components/Menu'
@@ -52,11 +54,11 @@ const Routes = () => (
       <PrivateRoute
         exact
         path='/categories'
-        component={() => (
+        component={props => (
           <Fragment>
             <Header />
             <Menu />
-            <Categories />
+            <Categories {...props.authUser} />
           </Fragment>
         )}
       />
@@ -117,4 +119,11 @@ const Routes = () => (
   </BrowserRouter>
 )
 
-export default Routes
+const mapStateToProps = state => ({
+  authUser: state.auth.authUser,
+  products: state.product.products
+})
+
+const mapDispatchToProps = () => ({})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Routes)
