@@ -14,105 +14,9 @@ export const Title = styled.h3`
   color: ${INPUT_TEXT_COLOR};
   text-align: center;
   max-width: 250px;
-  margin-top: 45px;
-  font-style: italic;
-`
-
-export const Form = styled.form`
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-`
-
-export const ProfileInfo = styled.input`
-  margin-top: 10px;
-  border-radius: 4px;
-  font-size: 16px;
-  text-align: center;
-  color: ${INPUT_TEXT_COLOR};
-  padding: 15px 15px 15px 15px;
-  border: none;
-  background-color: rgba(255, 255, 255, 1);
-
-  ::placeholder {
-    color: ${INPUT_TEXT_COLOR};
-  }
-
-  :disabled {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`
-
-export const DateLabel = styled.p`
-  margin-top: 20px;
-  font-size: 13px;
-  text-align: center;
-  color: ${INPUT_TEXT_COLOR};
-`
-
-export const BrithInfo = styled.input`
-  margin-top: 10px;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 300px;
-  text-align: center;
-  color: ${INPUT_TEXT_COLOR};
-  padding: 15px 15px 15px 70px;
-  border: none;
-  background-color: rgba(255, 255, 255, 1);
-
-  ::placeholder {
-    color: ${INPUT_TEXT_COLOR};
-  }
-
-  :disabled {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`
-
-export const ProductSelect = styled.select`
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-
-  margin-top: 10px;
-  border-radius: 4px;
-  color: ${INPUT_TEXT_COLOR};
-  font-size: 16px;
-  padding: 15px 15px 15px 15px;
-  font-size: 16px;
-
-  text-align: center;
-  text-align-last: center;
-
-  border: none;
-  background-color: rgba(255, 255, 255, 1);
-
-  ::placeholder {
-    color: ${INPUT_TEXT_COLOR};
-  }
-
-  :disabled {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-`
-
-export const RegisterProduct = styled.button`
-  margin-top: 20px;
-  border: 0;
-  border-radius: 5px;
-  height: 40px;
-  background: #4776e6;
-  cursor: pointer;
-  transition: 0.3s;
-
-  font-size: 13px;
-  color: #fff;
-
-  :hover {
-    background: #3967d4;
-  }
+  font-weight: bold;
+  margin-top: 35px;
+  margin-bottom: 20px;
 `
 
 export const GoToProfile = styled.button`
@@ -140,4 +44,59 @@ export const GoToProfile = styled.button`
   :hover {
     background: #3967d4;
   }
+`
+
+export const CardContainer = styled.div`
+  a {
+    text-decoration: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    width: 90%;
+  }
+`
+
+export const CardDiv = styled.div`
+  display: flex;
+  justify-content: center;
+
+  flex-direction: column;
+
+  width: 850px;
+  height: 80px;
+  background: white;
+  border-radius: 8px;
+  margin-right: 15px;
+  margin-bottom: 15px;
+  -webkit-box-shadow: 26px 3px 44px -42px rgba(0, 0, 0, 0.48);
+  -moz-box-shadow: 26px 3px 44px -42px rgba(0, 0, 0, 0.48);
+  box-shadow: 26px 3px 44px -42px rgba(0, 0, 0, 0.48);
+
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    width: 100%;
+    margin-right: 0;
+  }
+`
+
+export const CardContent = styled.div`
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+`
+
+export const CardTitle = styled.h2`
+  font-size: 18px;
+  font-weight: 900;
+  color: #3967d4;
+`
+
+export const CardDescription = styled.p`
+  font-size: 13px;
+  font-style: italic;
+  color: grey;
 `

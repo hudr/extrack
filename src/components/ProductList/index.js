@@ -8,27 +8,38 @@ import { Creators as ProductActions } from '../../store/ducks/product'
 
 import { bindActionCreators } from 'redux'
 
-import Loader from '../../components/Loader'
+import LoaderBullets from '../../components/LoaderBullets'
 
-import { StyledContainer, Title, GoToProfile } from './styled'
+import { alertSuccessMessage } from '../../utils/SweetAlert'
+
+import {
+  StyledContainer,
+  Title,
+  GoToProfile,
+  CardContainer,
+  CardDiv,
+  CardContent,
+  CardImg,
+  CardTitle,
+  CardDescription
+} from './styled'
 
 class ProductList extends Component {
   state = {
+    userUid: this.props.authUser.userUid,
     userProductsByCategory: []
   }
 
   handleRemoveProduct = async rowIndex => {
-    const { handleLoader, removeUserProduct } = this.props
-
+    const { removeUserProduct, handleLoader } = this.props
     await handleLoader(true)
     await removeUserProduct(rowIndex)
     await handleLoader(false)
+    alertSuccessMessage('Product has been removed')
   }
 
   async componentDidMount() {
-    const {
-      authUser: { userUid }
-    } = this.props
+    const { userUid } = this.state
     const { products, category } = this.props
 
     const userProductsByCategory = products.filter(
@@ -44,7 +55,7 @@ class ProductList extends Component {
     return (
       <>
         {isLoading ? (
-          <Loader />
+          <LoaderBullets />
         ) : (
           <StyledContainer>
             {!userProductsByCategory.length > 0 ? (
@@ -59,29 +70,34 @@ class ProductList extends Component {
               </Fragment>
             ) : (
               <Fragment>
-                <Title>{category} List</Title>
-                <ul>
-                  {userProductsByCategory.map(product => (
-                    <div key={product.createdAt}>
-                      <li style={{ marginTop: '20px' }}>
-                        <p>
-                          Name: {product.pName} | Qty: {product.pQuantity}
-                        </p>
-
-                        <p>
-                          R$: {product.pPrice}{' '}
-                          <button
-                            onClick={() =>
-                              this.handleRemoveProduct(product.rowIndex)
-                            }
-                          >
-                            Delete
-                          </button>
-                        </p>
-                      </li>
-                    </div>
-                  ))}
-                </ul>
+                <Title>{category.toUpperCase()} PRODUCTS</Title>
+                <CardContainer>
+                  <Fragment>
+                    {userProductsByCategory.map(product => (
+                      <CardDiv key={product.createdAt}>
+                        <CardContent>
+                          <div>
+                            <CardTitle>{product.pName}</CardTitle>
+                            <CardDescription>
+                              Quantity: {product.pQuantity} | Unity price: R$
+                              {product.pPrice}
+                            </CardDescription>
+                          </div>
+                          <div>
+                            <button disabled>Edit</button>
+                            <button
+                              onClick={() =>
+                                this.handleRemoveProduct(product.rowIndex)
+                              }
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </CardContent>
+                      </CardDiv>
+                    ))}
+                  </Fragment>
+                </CardContainer>
               </Fragment>
             )}
           </StyledContainer>
