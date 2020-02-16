@@ -19,7 +19,6 @@ import {
   CardContainer,
   CardDiv,
   CardContent,
-  CardImg,
   CardTitle,
   CardDescription
 } from './styled'
