@@ -2,7 +2,7 @@
   "name": "extrack",
   "version": "1.0.0",
   "description": "",
-  "proxy": "https://api.sheetson.com/",
+  "proxy": "https://api-staging.sheetson.com/",
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
