@@ -17,10 +17,7 @@ export const getProducts = async () => {
       `/${API_VERSION}/sheets/${SHEET_NAME}?&skip=${SKIP}&limit=${LIMIT}&spreadsheetId=${SPREADSHEET_ID}`
     )
     .then(res => {
-      const productsFiltered = res.data.results.filter(
-        product => Number(product.isActive) === 1
-      )
-      return productsFiltered
+      return res.data.results
     })
     .catch(err => {
       console.error(err)
@@ -40,9 +37,8 @@ export const insertProduct = async productData => {
 
 export const removeProduct = async rowIndex => {
   return sheetson
-    .patch(
-      `/${API_VERSION}/sheets/${SHEET_NAME}/${rowIndex}?spreadsheetId=${SPREADSHEET_ID}`,
-      { isActive: '0' }
+    .delete(
+      `/${API_VERSION}/sheets/${SHEET_NAME}/${rowIndex}?spreadsheetId=${SPREADSHEET_ID}`
     )
     .catch(err => {
       console.error(err)

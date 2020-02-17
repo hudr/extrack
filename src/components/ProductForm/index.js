@@ -63,7 +63,6 @@ class ProductForm extends Component {
         pCategory,
         pQuantity,
         pPrice,
-        isActive: 1,
         createdAt: new Date(),
         updatedAt: new Date()
       })
