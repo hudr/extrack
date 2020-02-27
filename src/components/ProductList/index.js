@@ -1,12 +1,9 @@
-import React, { Component, Fragment } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-import { connect } from 'react-redux'
+import { useSelector, shallowEqual, useDispatch } from 'react-redux'
 
-import { Creators as AuthActions } from '../../store/ducks/auth'
 import { Creators as ProductActions } from '../../store/ducks/product'
-
-import { bindActionCreators } from 'redux'
 
 import LoaderBullets from '../../components/LoaderBullets'
 
@@ -23,96 +20,87 @@ import {
   CardDescription
 } from './styled'
 
-class ProductList extends Component {
-  state = {
-    userUid: this.props.authUser.userUid,
-    userProductsByCategory: []
-  }
+export default function ProductList({ category }) {
+  //Getting redux states
+  const { isLoading, authUser, products } = useSelector(
+    state => ({
+      isLoading: state.auth.isLoading,
+      authUser: state.auth.authUser,
+      products: state.product.products
+    }),
+    shallowEqual
+  )
 
-  handleRemoveProduct = async rowIndex => {
-    const { removeUserProduct, handleLoader } = this.props
-    await handleLoader(true)
-    await removeUserProduct(rowIndex)
-    await handleLoader(false)
+  //Component's state
+  const [userProductsByCategory, setUserProductsByCategory] = useState([])
+
+  console.log(products)
+
+  useEffect(() => {
+    async function getUserProducts() {
+      const userProductsByCategory = products.filter(
+        product =>
+          product.userUid === authUser.userUid && product.category === category
+      )
+      setUserProductsByCategory(userProductsByCategory)
+    }
+
+    getUserProducts()
+  }, [authUser, category, products])
+
+  const dispatch = useDispatch()
+
+  async function handleRemoveProduct(rowIndex) {
+    dispatch(ProductActions.removeUserProduct(rowIndex))
     alertSuccessMessage('Product has been removed')
   }
 
-  async componentDidMount() {
-    const { userUid } = this.state
-    const { products, category } = this.props
-
-    const userProductsByCategory = products.filter(
-      product => product.userUid === userUid && product.pCategory === category
-    )
-    this.setState({ userProductsByCategory })
+  if (isLoading) {
+    return <LoaderBullets />
   }
 
-  render() {
-    const { category, isLoading } = this.props
-    const { userProductsByCategory } = this.state
-
-    return (
-      <>
-        {isLoading ? (
-          <LoaderBullets />
-        ) : (
-          <StyledContainer>
-            {!userProductsByCategory.length > 0 ? (
-              <Fragment>
-                <Title>
-                  This category is empty. Why don't you create your first
-                  product here?
-                </Title>
-                <GoToProfile>
-                  <Link to='/create'>Insert a product</Link>
-                </GoToProfile>
-              </Fragment>
-            ) : (
-              <Fragment>
-                <Title>{category.toUpperCase()} PRODUCTS</Title>
-                <CardContainer>
-                  <Fragment>
-                    {userProductsByCategory.map(product => (
-                      <CardDiv key={product.createdAt}>
-                        <CardContent>
-                          <div>
-                            <CardTitle>{product.pName}</CardTitle>
-                            <CardDescription>
-                              Quantity: {product.pQuantity} | Unity price: R$
-                              {product.pPrice}
-                            </CardDescription>
-                          </div>
-                          <div>
-                            <button disabled>Edit</button>
-                            <button
-                              onClick={() =>
-                                this.handleRemoveProduct(product.rowIndex)
-                              }
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </CardContent>
-                      </CardDiv>
-                    ))}
-                  </Fragment>
-                </CardContainer>
-              </Fragment>
-            )}
-          </StyledContainer>
-        )}
-      </>
-    )
-  }
+  return (
+    <StyledContainer>
+      {!userProductsByCategory.length > 0 ? (
+        <>
+          <Title>
+            This category is empty. Why don't you create your first product
+            here?
+          </Title>
+          <GoToProfile>
+            <Link to='/create'>Insert a product</Link>
+          </GoToProfile>
+        </>
+      ) : (
+        <>
+          <Title>{category.toUpperCase()} PRODUCTS</Title>
+          <CardContainer>
+            <>
+              {userProductsByCategory.map(product => (
+                <CardDiv key={product.createdAt}>
+                  <CardContent>
+                    <div>
+                      <CardTitle>{product.name}</CardTitle>
+                      <CardDescription>
+                        Quantity: {product.qty} | Unity price: R$
+                        {product.price}
+                      </CardDescription>
+                    </div>
+                    <div>
+                      <button disabled>Edit</button>
+                      <button
+                        onClick={() => handleRemoveProduct(product.rowIndex)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </CardContent>
+                </CardDiv>
+              ))}
+            </>
+          </CardContainer>
+        </>
+      )}
+    </StyledContainer>
+  )
 }
-
-const mapStateToProps = state => ({
-  isLoading: state.auth.isLoading,
-  authUser: state.auth.authUser,
-  products: state.product.products
-})
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ ...AuthActions, ...ProductActions }, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductList)

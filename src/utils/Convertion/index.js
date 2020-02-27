@@ -11,20 +11,17 @@ export const filterUserProducts = async (products, userUid) => {
   const userProducts = products.filter(product => product.userUid === userUid)
 
   const totalValueFromAllCategories = userProducts.map(
-    multiply => parseFloat(multiply.pQuantity) * parseFloat(multiply.pPrice)
+    multiply => parseFloat(multiply.qty) * parseFloat(multiply.price)
   )
 
   const userProductsFromCategory = categories.map(category =>
-    userProducts.filter(userProduct => userProduct.pCategory === category)
+    userProducts.filter(userProduct => userProduct.category === category)
   )
 
   const totalValueFromCategory = userProductsFromCategory.map(
     userProductFromCategory =>
       userProductFromCategory
-        .map(
-          multiply =>
-            parseFloat(multiply.pQuantity) * parseFloat(multiply.pPrice)
-        )
+        .map(multiply => parseFloat(multiply.qty) * parseFloat(multiply.price))
         .reduce((acc, product) => product + acc, 0)
         .toFixed(2)
   )
@@ -32,7 +29,7 @@ export const filterUserProducts = async (products, userUid) => {
   const totalProductsFromCategory = userProductsFromCategory.map(
     userProductFromCategory =>
       userProductFromCategory
-        .map(product => Number(product.pQuantity))
+        .map(product => Number(product.qty))
         .reduce((acc, product) => product + acc, 0)
   )
 
@@ -93,20 +90,17 @@ export const filterAllUserProducts = async (
   )
 
   const allTotalValueFromAllCategories = allProducts.map(
-    multiply => parseFloat(multiply.pQuantity) * parseFloat(multiply.pPrice)
+    multiply => parseFloat(multiply.qty) * parseFloat(multiply.price)
   )
 
   const allProductsFromCategory = allCategories.map(category =>
-    allProducts.filter(allProduct => allProduct.pCategory === category)
+    allProducts.filter(allProduct => allProduct.category === category)
   )
 
   const allTotalValueFromCategory = allProductsFromCategory.map(
     allProductFromCategory =>
       allProductFromCategory
-        .map(
-          multiply =>
-            parseFloat(multiply.pQuantity) * parseFloat(multiply.pPrice)
-        )
+        .map(multiply => parseFloat(multiply.qty) * parseFloat(multiply.price))
         .reduce((acc, product) => product + acc, 0)
         .toFixed(2)
   )
@@ -114,7 +108,7 @@ export const filterAllUserProducts = async (
   const allTotalProductsFromCategory = allProductsFromCategory.map(
     allProductFromCategory =>
       allProductFromCategory
-        .map(product => Number(product.pQuantity))
+        .map(product => Number(product.qty))
         .reduce((acc, product) => product + acc, 0)
   )
 
