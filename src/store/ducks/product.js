@@ -1,4 +1,5 @@
 import * as AxiosProduct from '../../service/Axios'
+import { Creators as AuthActions } from '../ducks/auth'
 
 export const Types = {
   PRODUCTS: 'product/PRODUCTS'
@@ -37,15 +38,19 @@ export const Creators = {
 
   submitUserProduct: productData => {
     return async dispatch => {
+      dispatch(AuthActions.handleLoader(true))
       await AxiosProduct.insertProduct(productData)
       await dispatch(Creators.getProducts())
+      dispatch(AuthActions.handleLoader(false))
     }
   },
 
   removeUserProduct: rowIndex => {
     return async dispatch => {
+      dispatch(AuthActions.handleLoader(true))
       await AxiosProduct.removeProduct(rowIndex)
       await dispatch(Creators.getProducts())
+      dispatch(AuthActions.handleLoader(false))
     }
   }
 }
