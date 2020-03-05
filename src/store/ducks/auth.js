@@ -1,6 +1,8 @@
 import firebase from '../../config/Firebase'
 import { INITIAL_IMAGE } from '../../utils/Constants'
 
+import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
+
 import { getEarningClass } from '../../service/Axios'
 
 export const Types = {
@@ -8,14 +10,14 @@ export const Types = {
   LOGIN: 'auth/LOGIN',
   LOGOUT: 'auth/LOGOUT',
   USERINFO: 'auth/USERINFO',
-  ERROR: 'auth/ERROR'
+  ERROR: 'auth/ERROR',
 }
 
 const INITIAL_STATE = {
   isLogged: false,
   isLoading: false,
   authUser: {},
-  errorMessage: ''
+  errorMessage: '',
 }
 
 export default function reducer(state = INITIAL_STATE, action) {
@@ -23,31 +25,31 @@ export default function reducer(state = INITIAL_STATE, action) {
     case Types.LOADING:
       return {
         ...state,
-        isLoading: action.payload
+        isLoading: action.payload,
       }
     case Types.LOGIN:
       return {
         ...state,
         isLogged: true,
-        errorMessage: ''
+        errorMessage: '',
       }
     case Types.USERINFO:
       return {
         ...state,
         authUser: action.payload,
         isLogged: true,
-        errorMessage: ''
+        errorMessage: '',
       }
     case Types.LOGOUT:
       return {
         ...state,
         isLogged: action.payload.isLogged,
-        authUser: action.payload.authUser
+        authUser: action.payload.authUser,
       }
     case Types.ERROR:
       return {
         ...state,
-        errorMessage: action.payload
+        errorMessage: action.payload,
       }
     default:
       return state
@@ -61,7 +63,7 @@ export const Creators = {
     password,
     confirmPassword,
     firstName,
-    userImageBase64
+    userImageBase64,
   ) => {
     return async dispatch => {
       const db = firebase.firestore()
@@ -79,12 +81,12 @@ export const Creators = {
       if (!email || !password || !confirmPassword || !firstName || !city) {
         dispatch({
           type: Types.ERROR,
-          payload: 'Please, fill in all required fields.'
+          payload: 'Please, fill in all required fields.',
         })
       } else if (password !== confirmPassword) {
         dispatch({
           type: Types.ERROR,
-          payload: 'Passwords need to be equal.'
+          payload: 'Passwords need to be equal.',
         })
       } else {
         await firebase
@@ -98,13 +100,13 @@ export const Creators = {
               .doc(user.user.uid)
               .set({
                 name: firstName,
-                city
+                city,
               })
 
             const userImageURL = await imgsRef
               .child(user.user.uid)
               .putString(userImageBase64, 'base64', {
-                contentType: 'image/png'
+                contentType: 'image/png',
               })
               .then(
                 async () =>
@@ -113,7 +115,7 @@ export const Creators = {
                     .getDownloadURL()
                     .then(url => {
                       return url
-                    })
+                    }),
               )
 
             dispatch({
@@ -122,33 +124,33 @@ export const Creators = {
                 userName: firstName,
                 userCity: city,
                 userEmail: email,
-                userImageURL
-              }
+                userImageURL,
+              },
             })
           })
           .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
                 type: Types.ERROR,
-                payload: 'Invalid email address format.'
+                payload: 'Invalid email address format.',
               })
 
             if (error.code === 'auth/email-already-in-use')
               dispatch({
                 type: Types.ERROR,
-                payload: 'This email is already in use.'
+                payload: 'This email is already in use.',
               })
 
             if (error.code === 'auth/weak-password')
               dispatch({
                 type: Types.ERROR,
-                payload: 'You need to use a strong password.'
+                payload: 'You need to use a strong password.',
               })
 
             if (error.code === 'auth/operation-not-allowed')
               dispatch({
                 type: Types.ERROR,
-                payload: "Create user with email isn't allowed."
+                payload: "Create user with email isn't allowed.",
               })
           })
       }
@@ -160,7 +162,7 @@ export const Creators = {
       if (!email || !password) {
         dispatch({
           type: Types.ERROR,
-          payload: 'Please, fill in all required fields.'
+          payload: 'Please, fill in all required fields.',
         })
       } else {
         await firebase
@@ -173,32 +175,32 @@ export const Creators = {
             async () =>
               await dispatch({
                 type: Types.LOGIN,
-                payload: true
-              })
+                payload: true,
+              }),
           )
           .catch(error => {
             if (error.code === 'auth/invalid-email')
               dispatch({
                 type: Types.ERROR,
-                payload: 'Invalid email address format.'
+                payload: 'Invalid email address format.',
               })
 
             if (error.code === 'auth/user-not-found')
               dispatch({
                 type: Types.ERROR,
-                payload: "This account doesn't exist."
+                payload: "This account doesn't exist.",
               })
 
             if (error.code === 'auth/wrong-password')
               dispatch({
                 type: Types.ERROR,
-                payload: 'Wrong password.'
+                payload: 'Wrong password.',
               })
 
             if (error.code === 'auth/too-many-requests')
               dispatch({
                 type: Types.ERROR,
-                payload: 'You tried to login so many times, wait.'
+                payload: 'You tried to login so many times, wait.',
               })
           })
       }
@@ -210,7 +212,7 @@ export const Creators = {
       if (!email) {
         dispatch({
           type: Types.ERROR,
-          payload: 'Please, fill in all required fields.'
+          payload: 'Please, fill in all required fields.',
         })
       } else {
         await firebase
@@ -220,13 +222,13 @@ export const Creators = {
             if (error.code === 'auth/invalid-email')
               dispatch({
                 type: Types.ERROR,
-                payload: 'Invalid email address format.'
+                payload: 'Invalid email address format.',
               })
 
             if (error.code === 'auth/user-not-found')
               dispatch({
                 type: Types.ERROR,
-                payload: "This account doesn't exist."
+                payload: "This account doesn't exist.",
               })
           })
       }
@@ -239,7 +241,7 @@ export const Creators = {
     userCity,
     userGenre,
     userEmail,
-    userImageBase64
+    userImageBase64,
   ) => {
     return async dispatch => {
       const db = firebase.firestore()
@@ -247,11 +249,15 @@ export const Creators = {
       const hasBase64 = userImageBase64 ? true : false
 
       if (!userName || !monthAmount || !userGenre || !userEmail || !userCity) {
-        await dispatch({
+        dispatch({
           type: Types.ERROR,
-          payload: 'Please, fill in all required fields.'
+          payload: 'Please, fill in all required fields.',
         })
+
+        alertErrorMessage('Please, fill in all required fields.')
+        return false
       } else {
+        await dispatch(Creators.handleLoader(true))
         const user = firebase.auth().currentUser
         if (user) {
           //Get UserPicture
@@ -265,7 +271,7 @@ export const Creators = {
             await imgsRef
               .child(user.uid)
               .putString(userImageBase64, 'base64', {
-                contentType: 'image/png'
+                contentType: 'image/png',
               })
               .then(
                 async () =>
@@ -274,7 +280,7 @@ export const Creators = {
                     .getDownloadURL()
                     .then(url => {
                       userImageURL = url
-                    })
+                    }),
               )
           } else {
             await imgsRef
@@ -300,7 +306,7 @@ export const Creators = {
                   amount: monthAmount,
                   city: userCity,
                   gender: userGenre,
-                  earningClass: userEarnClass
+                  earningClass: userEarnClass,
                 })
 
               dispatch({
@@ -313,21 +319,25 @@ export const Creators = {
                   userEarnClass,
                   userEmail,
                   userUid: user.uid,
-                  userImageURL
-                }
+                  userImageURL,
+                },
               })
+
+              await dispatch(Creators.handleLoader(false))
+              alertSuccessMessage('Your profile has been updated')
+              return true
             })
             .catch(error => {
               if (error.code === 'auth/invalid-email')
                 dispatch({
                   type: Types.ERROR,
-                  payload: 'Invalid email address format.'
+                  payload: 'Invalid email address format.',
                 })
 
               if (error.code === 'auth/email-already-in-use')
                 dispatch({
                   type: Types.ERROR,
-                  payload: 'This email is already in use.'
+                  payload: 'This email is already in use.',
                 })
             })
         }
@@ -379,8 +389,8 @@ export const Creators = {
                   userGenre: gender,
                   userEmail: user.email,
                   userUid: user.uid,
-                  userImageURL
-                }
+                  userImageURL,
+                },
               })
             } else {
               console.log('No such document!')
@@ -406,9 +416,9 @@ export const Creators = {
               type: Types.LOGOUT,
               payload: {
                 isLogged: false,
-                authUser: {}
-              }
-            })
+                authUser: {},
+              },
+            }),
           )
           .catch(error => {
             console.error(error)
@@ -423,8 +433,8 @@ export const Creators = {
     return async dispatch => {
       dispatch({
         type: Types.LOADING,
-        payload: status
+        payload: status,
       })
     }
-  }
+  },
 }

@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-
 import { Creators as ProductActions } from '../../store/ducks/product'
-
-import LoaderBullets from '../../components/LoaderBullets'
-
+import LoaderBullets from '../LoaderBullets'
 import { alertSuccessMessage } from '../../utils/SweetAlert'
 
 import {
@@ -17,7 +14,7 @@ import {
   CardDiv,
   CardContent,
   CardTitle,
-  CardDescription
+  CardDescription,
 } from './styled'
 
 export default function ProductList({ category }) {
@@ -26,21 +23,19 @@ export default function ProductList({ category }) {
     state => ({
       isLoading: state.auth.isLoading,
       authUser: state.auth.authUser,
-      products: state.product.products
+      products: state.product.products,
     }),
-    shallowEqual
+    shallowEqual,
   )
 
   //Component's state
   const [userProductsByCategory, setUserProductsByCategory] = useState([])
 
-  console.log(products)
-
   useEffect(() => {
     async function getUserProducts() {
       const userProductsByCategory = products.filter(
         product =>
-          product.userUid === authUser.userUid && product.category === category
+          product.userUid === authUser.userUid && product.category === category,
       )
       setUserProductsByCategory(userProductsByCategory)
     }
@@ -50,7 +45,7 @@ export default function ProductList({ category }) {
 
   const dispatch = useDispatch()
 
-  async function handleRemoveProduct(rowIndex) {
+  function handleRemoveProduct(rowIndex) {
     dispatch(ProductActions.removeUserProduct(rowIndex))
     alertSuccessMessage('Product has been removed')
   }
@@ -68,7 +63,7 @@ export default function ProductList({ category }) {
             here?
           </Title>
           <GoToProfile>
-            <Link to='/create'>Insert a product</Link>
+            <Link to="/create">Insert a product</Link>
           </GoToProfile>
         </>
       ) : (
@@ -103,4 +98,8 @@ export default function ProductList({ category }) {
       )}
     </StyledContainer>
   )
+}
+
+ProductList.propTypes = {
+  category: PropTypes.string.isRequired,
 }
