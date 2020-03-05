@@ -25,13 +25,13 @@ import { Categories as CategoriesMock } from './utils/Mocks/Categories'
 const Routes = () => (
   <BrowserRouter>
     <Switch>
-      <Route exact path='/' component={SignIn} />
-      <Route exact path='/signup' component={SignUp} />
-      <Route exact path='/forgotpw' component={ForgotPassword} />
+      <Route exact path="/" component={SignIn} />
+      <Route exact path="/signup" component={SignUp} />
+      <Route exact path="/forgotpw" component={ForgotPassword} />
 
       <PrivateRoute
         exact
-        path='/profile'
+        path="/profile"
         component={() => (
           <Fragment>
             <Profile />
@@ -41,7 +41,7 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/create'
+        path="/create"
         component={() => (
           <Fragment>
             <Header />
@@ -53,7 +53,7 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/categories'
+        path="/categories"
         component={props => (
           <Fragment>
             <Header />
@@ -80,7 +80,7 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/categories'
+        path="/categories"
         component={() => (
           <Fragment>
             <Header />
@@ -92,7 +92,7 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/comparative'
+        path="/comparative"
         component={() => (
           <Fragment>
             <Header />
@@ -104,7 +104,7 @@ const Routes = () => (
 
       <PrivateRoute
         exact
-        path='/tips'
+        path="/tips"
         component={() => (
           <Fragment>
             <Header />
@@ -114,14 +114,14 @@ const Routes = () => (
         )}
       />
 
-      <Route path='*' exact={true} component={NotFound} />
+      <Route path="*" exact={true} component={NotFound} />
     </Switch>
   </BrowserRouter>
 )
 
 const mapStateToProps = state => ({
   authUser: state.auth.authUser,
-  products: state.product.products
+  products: state.product.products,
 })
 
 const mapDispatchToProps = () => ({})
