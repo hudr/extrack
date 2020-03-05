@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-
 import { useSelector, shallowEqual, useDispatch } from 'react-redux'
-
 import { Creators as ProductActions } from '../../store/ducks/product'
-
-import LoaderBullets from '../../components/LoaderBullets'
-
+import LoaderBullets from '../LoaderBullets'
 import { alertSuccessMessage, alertErrorMessage } from '../../utils/SweetAlert'
 
 import {
@@ -16,7 +12,7 @@ import {
   ProfileInfo,
   ProductSelect,
   GoToProfile,
-  RegisterProduct
+  RegisterProduct,
 } from './styled'
 
 export default function ProductForm() {
@@ -24,9 +20,9 @@ export default function ProductForm() {
   const { isLoading, authUser } = useSelector(
     state => ({
       isLoading: state.auth.isLoading,
-      authUser: state.auth.authUser
+      authUser: state.auth.authUser,
     }),
-    shallowEqual
+    shallowEqual,
   )
 
   //Component states
@@ -42,7 +38,7 @@ export default function ProductForm() {
     return <LoaderBullets />
   }
 
-  async function submitProduct(e) {
+  function submitProduct(e) {
     e.preventDefault()
 
     if (name && category !== 'default' && qty && price) {
@@ -58,8 +54,8 @@ export default function ProductForm() {
           qty,
           price,
           createdAt: new Date(),
-          updatedAt: new Date()
-        })
+          updatedAt: new Date(),
+        }),
       )
 
       //Display success message
@@ -85,7 +81,7 @@ export default function ProductForm() {
             You can't insert products yet. Please complete your profile.
           </Title>
           <GoToProfile>
-            <Link to='/profile'>Go to profile</Link>
+            <Link to="/profile">Go to profile</Link>
           </GoToProfile>
         </>
       ) : (
@@ -93,8 +89,8 @@ export default function ProductForm() {
           <Title>Fill all informations to register your products:</Title>
           <Form onSubmit={submitProduct}>
             <ProfileInfo
-              placeholder='Name*'
-              type='text'
+              placeholder="Name*"
+              type="text"
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -103,36 +99,36 @@ export default function ProductForm() {
               value={category}
               onChange={e => setCategory(e.target.value)}
             >
-              <option value='default' disabled>
+              <option value="default" disabled>
                 Select the category*
               </option>
-              <option value='Food'>Food</option>
-              <option value='House'>House</option>
-              <option value='Vehicle'>Vehicle</option>
-              <option value='Health'>Health</option>
-              <option value='Beauty'>Beauty</option>
-              <option value='Personal'>Personal</option>
+              <option value="Food">Food</option>
+              <option value="House">House</option>
+              <option value="Vehicle">Vehicle</option>
+              <option value="Health">Health</option>
+              <option value="Beauty">Beauty</option>
+              <option value="Personal">Personal</option>
             </ProductSelect>
 
             <ProfileInfo
-              placeholder='Quantity*'
+              placeholder="Quantity*"
               value={qty}
-              type='number'
-              min='1'
-              step='1'
+              type="number"
+              min="1"
+              step="1"
               onChange={e => setQty(e.target.value)}
             />
 
             <ProfileInfo
-              placeholder='Price*'
+              placeholder="Price*"
               value={price}
-              type='number'
-              min='0.01'
-              step='.01'
+              type="number"
+              min="0.01"
+              step=".01"
               onChange={e => setPrice(e.target.value)}
             />
 
-            <RegisterProduct type='submit'>+</RegisterProduct>
+            <RegisterProduct type="submit">+</RegisterProduct>
           </Form>
         </>
       )}
