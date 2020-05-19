@@ -22,13 +22,13 @@ import {
   ForgotLink,
   CreateAccount,
   CreateAccountText,
-  CreateAccountButton
+  CreateAccountButton,
 } from './styled'
 
 class SignIn extends Component {
   state = {
     email: '',
-    password: ''
+    password: '',
   }
 
   componentDidMount() {
@@ -58,10 +58,11 @@ class SignIn extends Component {
       alertErrorMessage(errorMessage)
     }
 
-    const { isLogged, getProducts } = this.props
+    const { isLogged, getProducts, getTips } = this.props
 
     if (isLogged === true) {
       await getProducts()
+      await getTips()
       this.props.history.push('/categories')
     }
 
@@ -79,26 +80,26 @@ class SignIn extends Component {
         <Form onSubmit={this.handleSignIn}>
           <Img src={logo} />
           <Input
-            placeholder='Username'
+            placeholder="Username"
             value={email}
             onChange={e => this.setState({ email: e.target.value })}
           />
           <Input
-            type='password'
-            placeholder='Password'
+            type="password"
+            placeholder="Password"
             value={password}
             onChange={e => this.setState({ password: e.target.value })}
           />
 
-          <LoginButton type='submit'>Login</LoginButton>
+          <LoginButton type="submit">Login</LoginButton>
 
           <ForgotLink>
-            <Link to='/forgotpw'>Forgot password?</Link>
+            <Link to="/forgotpw">Forgot password?</Link>
           </ForgotLink>
           <CreateAccount>
             <CreateAccountText>Don't have an account?</CreateAccountText>
             <CreateAccountButton>
-              <Link to='/signup'>Signup</Link>
+              <Link to="/signup">Signup</Link>
             </CreateAccountButton>
           </CreateAccount>
         </Form>
@@ -111,7 +112,7 @@ const mapStateToProps = state => ({
   isLoading: state.auth.isLoading,
   isLogged: state.auth.isLogged,
   authUser: state.auth.authUser,
-  errorMessage: state.auth.errorMessage
+  errorMessage: state.auth.errorMessage,
 })
 
 const mapDispatchToProps = dispatch =>

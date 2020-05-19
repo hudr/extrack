@@ -12,6 +12,7 @@ import Categories from './components/CategoryCards'
 import ProductList from './components/ProductList'
 import ProductForm from './components/ProductForm'
 import Comparative from './components/Comparative'
+import TipsList from './components/TipsList'
 
 //Pages
 import SignIn from './pages/SignIn'
@@ -109,7 +110,7 @@ const Routes = () => (
           <Fragment>
             <Header />
             <Menu />
-            <h1>Tips</h1>
+            <TipsList />
           </Fragment>
         )}
       />
