@@ -14,15 +14,6 @@ export const StyledContainer = styled.div`
 `
 
 export const CardContainer = styled.div`
-  a {
-    text-decoration: none;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    align-items: center;
-    margin: 0 auto;
-  }
-
   @media screen and (min-width: 320px) and (max-width: 767px) {
     width: 90%;
   }
@@ -34,8 +25,6 @@ export const CardDiv = styled.div`
   align-items: center;
   flex-direction: column;
 
-  width: 850px;
-  height: 150px;
   background: white;
   border-radius: 8px;
   margin-right: 15px;
@@ -51,25 +40,56 @@ export const CardDiv = styled.div`
 `
 
 export const CardContent = styled.div`
+  padding: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `
 
-export const CardImg = styled.img`
-  width: 40px;
-  margin-bottom: 10px;
-`
-
-export const CardTitle = styled.h2`
-  font-size: 18px;
+export const CardStore = styled.h2`
+  font-size: 20px;
   font-weight: 900;
   color: #3967d4;
+  margin-bottom: 3px;
 `
 
-export const CardDescription = styled.p`
-  font-size: 13px;
+export const CardProduct = styled.h2`
+  font-size: 16px;
+  font-style: italic;
+  text-align: center;
+  font-weight: 400;
+`
+
+export const CardPrice = styled.p`
+  font-size: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   font-style: italic;
   color: grey;
+`
+
+export const CardActions = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 150px;
+`
+
+export const CardLink = styled.a`
+  background-color: #3967d4;
+  font-size: 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  padding: 6px 15px 6px 15px;
+  color: white;
+`
+
+export const CardButton = styled.button`
+  border: 0;
+  background-color: #b45642;
+  font-size: 14px;
+  border-radius: 4px;
+  padding: 6px;
+  text-decoration: none;
+  color: white;
 `

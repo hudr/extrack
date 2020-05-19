@@ -86,7 +86,7 @@ export default function ProductForm() {
         </>
       ) : (
         <>
-          <Title>Fill all informations to register your products:</Title>
+          <Title>Fill all information to register your products:</Title>
           <Form onSubmit={submitProduct}>
             <ProfileInfo
               placeholder="Name*"
