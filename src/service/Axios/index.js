@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { alertTips } from '../../utils/SweetAlert'
 
 const sheetson = axios.create({
   baseURL: process.env.REACT_APP_SHEETSON_BASEURL,
@@ -85,7 +86,7 @@ export const getEarningClass = async monthAmount => {
 export const insertTip = async productData => {
   const { userUid, name, price, qty } = productData
 
-  let totalValue = price * qty
+  let totalValue = parseFloat(price) * parseInt(qty)
 
   return extrackcrawler
     .post('/find/item', {
@@ -93,8 +94,10 @@ export const insertTip = async productData => {
     })
     .then(res => {
       const result = res.data
+
       const tips = result.filter(
-        tip => parseFloat(tip.price) * qty < totalValue,
+        tip =>
+          parseFloat(tip.price.replace(',', '.')) * parseInt(qty) < totalValue,
       )
 
       tips.map(tip =>
@@ -109,6 +112,10 @@ export const insertTip = async productData => {
           },
         ),
       )
+
+      if (tips.length > 0) {
+        alertTips()
+      }
     })
     .catch(err => {
       console.error(err)

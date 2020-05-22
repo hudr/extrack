@@ -66,6 +66,8 @@ export const Creators = {
 
       await dispatch(Creators.getTips())
 
+      await dispatch(Creators.getTips())
+
       await dispatch(Creators.getProducts())
       dispatch(AuthActions.handleLoader(false))
     }
