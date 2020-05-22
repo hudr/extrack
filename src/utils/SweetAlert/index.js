@@ -11,7 +11,7 @@ export const alertSuccessMessage = message => {
     rgba(0,0,0,0.7)
     center left
     no-repeat
-  `
+  `,
   })
 }
 
@@ -26,6 +26,25 @@ export const alertErrorMessage = message => {
       rgba(0,0,0,0.7)
       center left
       no-repeat
-    `
+    `,
+  })
+}
+
+export const alertTips = () => {
+  Swal.fire({
+    position: 'bottom-end',
+    title: 'Hey! You have a new tip!',
+    timer: 10000,
+
+    showCancelButton: true,
+    cancelButtonColor: '#059DFF',
+    cancelButtonText: 'Ok',
+
+    confirmButtonColor: '#00A40C ',
+    confirmButtonText: 'Go to tips',
+  }).then(result => {
+    if (result.value) {
+      window.location = '/tips'
+    }
   })
 }
